@@ -25,7 +25,7 @@ class AppelOffre
     private $contexte;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $dateExp;
 

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}AppelOffre index{% endblock %}
+
+{% block body %}
+    <h1>AppelOffre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Contexte</th>
+                <th>DateExp</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for appel_offre in appel_offres %}
+            <tr>
+                <td>{{ appel_offre.id }}</td>
+                <td>{{ appel_offre.contexte }}</td>
+                <td>{{ appel_offre.dateExp ? appel_offre.dateExp|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_appel_offre_show', {'id': appel_offre.id}) }}">show</a>
+                    <a href="{{ path('app_appel_offre_edit', {'id': appel_offre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_appel_offre_new') }}">Create new</a>
+{% endblock %}

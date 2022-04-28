@@ -17,6 +17,8 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+	        ->add('nom')
+	        ->add('prenom')
             ->add('email')
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
@@ -43,6 +45,14 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+	        ->add('telephone')
+	        ->add('genre')
+	        ->add('adresse')
+	        ->add('ville')
+	        ->add('codePostal')
+	        ->add('typeCarte')
+	        ->add('numeroCarte')
+	        ->add('codeSecurite')
         ;
     }
 

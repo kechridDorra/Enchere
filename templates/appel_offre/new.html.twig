@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New AppelOffre{% endblock %}
+
+{% block body %}
+    <h1>Create new AppelOffre</h1>
+
+    {{ include('appel_offre/_form.html.twig') }}
+
+    <a href="{{ path('app_appel_offre_index') }}">back to list</a>
+{% endblock %}

@@ -25,24 +25,16 @@ class Enchere
     private $description;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     private $dateDebut;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="datetime")
      */
     private $DateFin;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $heureDebut;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $heureFin;
+ 
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")

@@ -43,7 +43,7 @@ class UserController extends AbstractFOSRestController
 		$this->userRepository=$userRepository;
 	}
 	/** affichage liste des utilisateurs
-	 * @Rest\Get("/api/user")
+	 * @Rest\Get("/api/users", name="users")
 	 * @return Response
 	 */
 	public function getUsers()
@@ -54,7 +54,7 @@ class UserController extends AbstractFOSRestController
 	}
 	
 	/** affichage utilisateur
-	 * @Rest\Get("/api/user/{id}")
+	 * @Rest\Get("/api/user/{id}", name="profil_user")
 	 * @return \FOS\RestBundle\View\View
 	 */
 	public function getUserAction($id)
@@ -65,7 +65,7 @@ class UserController extends AbstractFOSRestController
 	}
 	/** creation utilisateur
 	 * @param Request $request
-	 * @Rest\Post("/new")
+	 * @Rest\Post("/inscription")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder)
@@ -106,6 +106,8 @@ class UserController extends AbstractFOSRestController
 		$em->flush();
 		return $this->handleView
 		($this->view(['utilisateur Enregistré' => 'ok'], Response::HTTP_CREATED));
+		
+		
 	}
 	
 	/** modification user
@@ -152,6 +154,9 @@ class UserController extends AbstractFOSRestController
 		$em->flush();
 		return $this->json('Utilisateur supprimé');
 	}
+	
+	
+
 	
 	
 	

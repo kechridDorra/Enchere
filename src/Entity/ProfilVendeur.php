@@ -39,6 +39,8 @@ class ProfilVendeur
      */
     private $propositions;
 
+    
+
     public function __construct()
     {
         $this->encheres = new ArrayCollection();
@@ -133,4 +135,10 @@ class ProfilVendeur
 
         return $this;
     }
+
+  
+    
+    
+
+    
 }
