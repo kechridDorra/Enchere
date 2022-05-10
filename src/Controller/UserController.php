@@ -105,7 +105,7 @@
 			$em->persist($user  );
 			$em->flush();
 			return $this->handleView
-			($this->view(['utilisateur Enregistré' => 'ok'], Response::HTTP_CREATED));
+			($this->view(['message' => 'utilisateur Enregistré'], Response::HTTP_CREATED));
 			
 			
 		}
