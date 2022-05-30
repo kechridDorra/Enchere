@@ -24,8 +24,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AppelOffreController extends AbstractFOSRestController
 {
 	/**
- * @var EntityManagerInterface
- */
+    * @var EntityManagerInterface
+    */
 	private $entityManager;
 	
 	/**
@@ -46,88 +46,115 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	
 	
-	/** creation appelOffre
+	/**
 	 * @param Request $request
-	 * @Rest\Post("/appelOffre/{user}", name="appel_offre_new")
-	 * @return \FOS\RestBundle\View\View|Response
+	 * @Rest\Get("/appelOffre/{appelOffre}", name="appel_offre_show")
+	 * @return \FOS\RestBundle\View\View
 	 */
-	public function new(Request $request, $user)
+	public function show(AppelOffre $appelOffre)
 	{
 		$data = $this->getDoctrine()->getRepository
-		(User::class)->find($user);
-		$em = $this->getDoctrine()->getManager();
-		$contexte = $request->get('contexte');
-		$appelOffre= new AppelOffre();
-		$appelOffre  ->setContexte($contexte);
-		$appelOffre  ->setDateExp(new \ DateTime());
-		$appelOffre  -> setUser($data);
-		$em->persist($appelOffre);
-		$em->flush();
-		return $this->handleView
-		($this->view(['Appel Offre enregistré' => 'ok'], Response::HTTP_CREATED));
+		(AppelOffre::class)->find($appelOffre);
+		return $this->view($data, Response::HTTP_OK);
 	}
-
-    /**
-     * @param Request $request
-     * @Rest\Get("/appelOffre/{appelOffre}", name="appel_offre_show")
-     * @return \FOS\RestBundle\View\View
-     */
-	
-    public function show(AppelOffre $appelOffre)
-    {
-	    $data = $this->getDoctrine()->getRepository
-	    (AppelOffre::class)->find($appelOffre);
-	    return $this->view($data, Response::HTTP_OK);
-    }
-    
-    
+	/** get appels selon user
+	 * @param Request $request
+	 * @Rest\Get("/appelOffre", name="appel_offre_get")
+	 *  @return Response
+	 */
+	public function getAppel()
+	{
+		$user= $this->getUser();
+		$appelOffres=$user->getAppelOffres();
+		$data = $this->getDoctrine()->getRepository(
+		AppelOffre::class)->findAll();
+		return $this->handleView($this->view($appelOffres));
+	}
 	
 	/**
 	 * @param Request $request
-	 * @Rest\Get("/appelOffres", name="appel_offre_list")
+	 * @Rest\Get("/appelOffres", name="pappel_offre_list")
 	 * @return Response
 	 */
 	public function list()
 	{
+		
 		$repository = $this->getDoctrine()->getRepository(AppelOffre::class);
 		$appelOffres = $repository->findAll();
 		return $this->handleView($this->view($appelOffres));
 	}
 	
-	/** modification user
+	/** creation appelOffre
 	 * @param Request $request
-	 * @Rest\Put("/appelOffre/{appelOffre}/{user}")
+	 * @Rest\Post("/appelOffre")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function update(Request $request, $user,$appelOffre):Response
-	{
-		$dataUser = $this->getDoctrine()->getRepository
-		(User::class)->find($user);
-		$dataOffre = $this->getDoctrine()->getRepository
-		(AppelOffre::class)->find($appelOffre);
-		$parameter = json_decode($request->getContent(),true);
-		$dataOffre->setContexte($parameter['contexte']);
-		$dataOffre->setdateExp($parameter['DateExp']);
+	public function new(Request $request)
+	{   $user = $this->getUser();
 		$em = $this->getDoctrine()->getManager();
-		$em->persist($dataOffre);
+		$contexte = $request->get('contexte');
+		$dateExp = $request ->get('dateExp');
+		$appelOffre= new AppelOffre();
+		$appelOffre  ->setContexte($contexte);
+		$appelOffre  ->setDateExp(new \DateTime($dateExp));
+		$user->addAppelOffre($appelOffre);
+		$em->persist($appelOffre);
 		$em->flush();
-		return $this->handleView($this->view(['Appel offre Modifie' => 'ok'], Response::HTTP_CREATED));
+		return $this->handleView
+		($this->view(['message'=>'Appel Offre enregistré'], Response::HTTP_CREATED));
 	}
 	
-	/**
-     * @param Request $request
-     * @Rest\Delete("/appelOffre/{appelOffre}/{user}", name="appel_offre_delete")
-     * @return \FOS\RestBundle\View\View|Response
-     */
-    public function delete(Request $request,$appelOffre, $user,AppelOffreRepository $appelOffreRepository): Response
-    {
-	    $data1 = $this->getDoctrine()->getRepository
-	    (User::class)->find($user);
-	    $data2 = $this->getDoctrine()->getRepository
-	    (AppelOffre::class)->find($appelOffre);
-	    $em = $this->getDoctrine()->getManager();
-	    $em->remove($data2);
-	    $em->flush();
-	    return $this->json('vendeur supprimé');
-    }
+	
+	/** suppression Appel offre
+	 * @param Request $request
+	 * @Rest\Delete("/appelOffre/{appelOffre}")
+	 * @return \FOS\RestBundle\View\View|Response
+	 */
+	public function deleteAppelOffre($appelOffre):Response
+	{
+		$user = $this->getUser();
+		$appelOffre = $this->getDoctrine()->getRepository
+		(AppelOffre::class)->find($appelOffre);
+		$em = $this->getDoctrine()->getManager();
+		$em->remove($appelOffre);
+		$em->flush();
+		return $this->json('Appel Offre supprimé');
+	}
+	/** modification appel offre
+	 * @param Request $request
+	 * @Rest\Put("/appelOffre/{appelOffre}")
+	 * @return \FOS\RestBundle\View\View|Response
+	 */
+	public function update(Request $request,$appelOffre):Response
+	{
+		
+		$user = $this->getUser();
+		$appelOffre = $this->getDoctrine()->getRepository
+		(AppelOffre::class)->find($appelOffre);
+		$parameter = json_decode($request->getContent(),true);
+		$dateExp = $request ->get('dateExp');
+		$appelOffre->setContexte($parameter['contexte']);
+		$appelOffre ->setDateExp(new \DateTime($dateExp));
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($appelOffre);
+		$em->flush();
+		return $this->handleView($this->view(['message'=> 'appel Offre Modifie' ], Response::HTTP_CREATED));
+	}
+	
+	/** get propositions selon appelOffre
+	 * @param Request $request
+	 * @Rest\Get("/appelOffreProp/{appelOffre}", name="prop_offre_get")
+	 *  @return Response
+	 */
+	public function getPropositionOffre(AppelOffre $appelOffre)
+	{
+		$data = $this->getDoctrine()->getRepository
+		(AppelOffre::class)->find($appelOffre);
+		return $this->view($data, Response::HTTP_OK);
+		$propositions = $data->getPropositions();
+		return $this->handleView($this->view($propositions));
+	}
+	
+	
+	
 }

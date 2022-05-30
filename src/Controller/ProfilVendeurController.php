@@ -41,37 +41,27 @@ class ProfilVendeurController extends AbstractFOSRestController
 		$this->profilVendeurRepository = $profilVendeurRepository;
 	}
 	
-	
-	/** creation profil vendeur
-	 * @param Request $request
-	 * @Rest\Post("/profilVendeur/{user}", name="appel_offre_new")
-	 * @return \FOS\RestBundle\View\View|Response
-	 */
-	public function new(Request $request, $user)
-	{
-		$data = $this->getDoctrine()->getRepository
-		(User::class)->find($user);
-		$em = $this->getDoctrine()->getManager();
-		$activite = $request->get('activite');
-		$nomEntreprise = $request->get('nomEntreprise');
-		$profilVendeur = new ProfilVendeur();
-		$profilVendeur->setActivite($activite);
-		$profilVendeur->setNomEntreprise($nomEntreprise);
-		$data->setProfilVendeur($profilVendeur);
-		$em->persist($profilVendeur);
-		$em->flush();
-		return $this->handleView
-		($this->view(['Profil Vendeur bien enregistré' => 'ok'], Response::HTTP_CREATED));
-	}
-	
 	/**
 	 * @param Request $request
 	 * @Rest\Get("/profilVendeur/{profilVendeur}", name="profil_vendeur_show")
 	 * @return \FOS\RestBundle\View\View
 	 */
-	
 	public function show(ProfilVendeur $profilVendeur)
 	{
+		$data = $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
+		return $this->view($data, Response::HTTP_OK);
+	}
+	/** get vendeur apres auth
+	 * @param Request $request
+	 * @Rest\Get("/profilVendeur", name="profil_vendeur_get")
+	 * @return \FOS\RestBundle\View\View
+	 */
+	public function getVendeur()
+	{
+		
+		$user= $this->getUser();
+		$profilVendeur=$this->getUser()->getProfilVendeur();
 		$data = $this->getDoctrine()->getRepository
 		(ProfilVendeur::class)->find($profilVendeur);
 		return $this->view($data, Response::HTTP_OK);
@@ -84,30 +74,65 @@ class ProfilVendeurController extends AbstractFOSRestController
 	 */
 	public function list()
 	{
+		
 		$repository = $this->getDoctrine()->getRepository(ProfilVendeur::class);
 		$profilVendeurs = $repository->findAll();
 		return $this->handleView($this->view($profilVendeurs));
 	}
 	
-	/** modification vendeur
+	
+	/** creation profil vendeur
 	 * @param Request $request
-	 * @Rest\Put("/profilVendeur/{profilVendeur}/{user}")
+	 * @Rest\Post("/profilVendeur", name="appel_offre_new")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function update(Request $request, $user,$profilVendeur):Response
+	public function newVendeur(Request $request)
 	{
-		$dataUser = $this->getDoctrine()->getRepository
-		(User::class)->find($user);
-		$dataVendeur = $this->getDoctrine()->getRepository
-		(ProfilVendeur::class)->find($profilVendeur);
-		$parameter = json_decode($request->getContent(),true);
-		$dataVendeur->setActivite($parameter['activite']);
-		$dataVendeur->setNomEntreprise($parameter['nomEntreprise']);
+		$user = $this->getUser();
 		$em = $this->getDoctrine()->getManager();
-		$em->persist($dataVendeur);
+		$activite = $request->get('activite');
+		$nomEntreprise = $request->get('nomEntreprise');
+		$profilVendeur = new ProfilVendeur();
+		$profilVendeur->setActivite($activite);
+		$profilVendeur->setNomEntreprise($nomEntreprise);
+		$user->setProfilVendeur($profilVendeur);
+		$em->persist($profilVendeur);
 		$em->flush();
-		return $this->handleView($this->view(['Vendeur Modifie' => 'ok'], Response::HTTP_CREATED));
+		return $this->handleView
+		($this->view(['message' => 'Vendeur bien enregistré'], Response::HTTP_CREATED));
 	}
 	
+	/** modification vendeur
+	 * @param Request $request
+	 * @Rest\Put("/profilVendeur")
+	 * @return \FOS\RestBundle\View\View|Response
+	 */
+	public function update(Request $request):Response
+	{
+		$user = $this->getUser();
+		$profilVendeur=$this->getUser()->getProfilVendeur();
+		$parameter = json_decode($request->getContent(),true);
+		$profilVendeur->setActivite($parameter['activite']);
+		$profilVendeur->setNomEntreprise($parameter['nomEntreprise']);
+		$em = $this->getDoctrine()->getManager();
+		$em->persist($profilVendeur);
+		$em->flush();
+		return $this->handleView($this->view(['message'=> 'Vendeur Modifie' ], Response::HTTP_CREATED));
+	}
 	
+	/** suppression Vendeur
+	 * @param Request $request
+	 * @Rest\Delete("/profilVendeur/{profilVendeur}")
+	 * @return \FOS\RestBundle\View\View|Response
+	 */
+	public function deleteVendeur($profilVendeur):Response
+	{
+		$user = $this->getUser();
+		$profilVendeur = $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
+		$em = $this->getDoctrine()->getManager();
+		$em->remove($profilVendeur);
+		$em->flush();
+		return $this->json('Vendeur supprimé');
+	}
 }

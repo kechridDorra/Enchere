@@ -16,13 +16,13 @@ class UserType extends AbstractType
 	        ->add('email')
 	        ->add('password')
 	        ->add('telephone')
-	        ->add('genre')
 	        ->add('adresse')
 	        ->add('ville')
 	        ->add('codePostal')
-	        ->add('typeCarte')
 	        ->add('numeroCarte')
 	        ->add('codeSecurite')
+	        ->add('moisExp')
+	        ->add('anneeExp')
         ;
     }
 

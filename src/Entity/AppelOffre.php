@@ -37,11 +37,11 @@ class AppelOffre
     /**
      * @ORM\OneToMany(targetEntity=Proposition::class, mappedBy="appelOffre")
      */
-    private $propositons;
+    private $propositions;
 
     public function __construct()
     {
-        $this->propositons = new ArrayCollection();
+        $this->propositions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,27 +88,29 @@ class AppelOffre
     /**
      * @return Collection<int, Proposition>
      */
-    public function getPropositons(): Collection
+    public function getPropositions(): Collection
     {
-        return $this->propositons;
+        return $this->propositions;
     }
 
-    public function addPropositon(Proposition $propositon): self
+    public function addProposition(Proposition $proposition): self
     {
-        if (!$this->propositons->contains($propositon)) {
-            $this->propositons[] = $propositon;
-            $propositon->setAppelOffre($this);
+        if (!$this->propositions->contains($proposition)) {
+            $this->propositions[] = $proposition;
+            $proposition->setAppelOffre($this);
         }
 
         return $this;
     }
 
-    public function removePropositon(Proposition $propositon): self
+   
+
+    public function removeProposition(Proposition $proposition): self
     {
-        if ($this->propositons->removeElement($propositon)) {
+        if ($this->propositions->removeElement($proposition)) {
             // set the owning side to null (unless already changed)
-            if ($propositon->getAppelOffre() === $this) {
-                $propositon->setAppelOffre(null);
+            if ($proposition->getAppelOffre() === $this) {
+                $proposition->setAppelOffre(null);
             }
         }
 
