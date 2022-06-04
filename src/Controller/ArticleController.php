@@ -2,17 +2,18 @@
 
 namespace App\Controller;
 use App\Entity\Article;
+use App\Entity\Categorie;
+use App\Entity\Enchere;
 use App\Entity\Images;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use Lcobucci\JWT\Signer\Ecdsa;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
@@ -20,116 +21,128 @@ use FOS\RestBundle\Controller\Annotations as Rest;
  */
 class ArticleController extends AbstractFOSRestController
 {
-	
 	/**
 	 * @var EntityManagerInterface
 	 */
-//	private $entityManager;
-	
+	private $entityManager;
 	
 	/**
 	 * @ ArticleRepository
 	 */
-//	private $articleRepository;
+	private $articleRepository;
 	
-/*	public function __construct( EntityManagerInterface $entityManager, ArticleRepository $articleRepository)
-	{ $this->entityManager = $entityManager;
-	  $this->articleRepository = $articleRepository;}
-		/**
-     * @Route("/", name="app_article_index", methods={"GET"})
-     */
-  /*  public function index(ArticleRepository $articleRepository): Response
-    {
-        return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
-        ]);
-    }
-    /**
-     * @Rest\Post("/article", name="new_article")
-     * @param Request $request
-     * @return int|Response
-     */
-/*	public function new(Request $request, ArticleRepository $articleRepository)
-    {
-	    $titre = $request->get('titre');
-	    $prixInitial = $request->get('prixInitial');
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
-	    if ($form->isSubmitted() && $form->isValid()) {
-		    // On récupère les images transmises
-		    $images = $form->get('images')->getData();
+	
+	
+	public function __construct( EntityManagerInterface $entityManager,
+	
+	                            ArticleRepository $articleRepository)
+	{
 		
-		    // On boucle sur les images
-		    foreach($images as $image){
-			    // On génère un nouveau nom de fichier
-			    $fichier = md5(uniqid()).'.'.$image->guessExtension();
-			
-			    // On copie le fichier dans le dossier uploads
-			    $image->move(
-				    $this->getParameter('images_directory'),
-				    $fichier
-			    );
-			
-			    // On crée l'image dans la base de données
-			    $img = new Images();
-			    $img->setNom($fichier);
-			    $article->addImage($img);
-			    $article  ->setTitre($titre);
-			    $article  ->setPrixInitial($prixInitial);
-		    }
+		$this->entityManager = $entityManager;
 		
-		    $entityManager = $this->getDoctrine()->getManager();
-		    $entityManager->persist($article);
-		    $entityManager->flush();
+		$this->articleRepository=$articleRepository;
+	}
+	
+	/**
+	 * @param Request $request
+	 * @Route("/article/{article}", name="article_show", methods={"GET"})
+	 * @return \FOS\RestBundle\View\View
+	 */
+	public function show(Article $article)
+	{
+		$data = $this->getDoctrine()->getRepository
+		(Article::class)->find($article);
+		return $this->view($data, Response::HTTP_OK);
+	}
+	
+	/**
+	 * @param Request $request
+	 * @Route("/articles", name="article_list", methods={"GET"})
+	 * @return Response
+	 */
+	public function list()
+	{
 		
-		    return $this->handleView
-		    ($this->view(['message' => 'article Enregistré'], Response::HTTP_CREATED));
-	    }
-	    
-	    return $this->handleView
-    ($this->view(['message' => 'article non Enregistré'], Response::HTTP_CREATED));
+		$repository = $this->getDoctrine()->getRepository(Article::class);
+		$articles = $repository->findAll();
+		return $this->handleView($this->view($articles));
+	}
     
-    }
-
-    /**
-     * @Route("/{id}", name="app_article_show", methods={"GET"})
+    /** creation article
+     * @param Request $request
+     * @Route("/article/{enchere}", name="app_article_new", methods={"POST"})
+     * @return \FOS\RestBundle\View\View|Response
      */
- /*   public function show(Article $article): Response
+    public function new(Request $request,Enchere $enchere)
     {
-        return $this->render('article/show.html.twig', [
-            'article' => $article,
-        ]);
-    }
+	    $em = $this->getDoctrine()->getManager();
+	    $ench = $this->getDoctrine()->getRepository
+	    (Enchere::class)->find($enchere);
+	    $titre = $request->get('titre');
+	    $description = $request ->get('description');
+	    $prixInitial =$request ->get('prixInitial');
+	    $categorie = $request->get('categorie');
+	    $cat = $this->getDoctrine()->getRepository
+	    (Categorie::class)->find($categorie);
+	    $images = $request->files;
+	    $article= new Article();
+	    $article ->setTitre($titre);
+	    $article ->setDescription($description);
+	    $article->setPrixInitial($prixInitial);
+	    $article->setCategorie($cat);
+	    $article->setEnchere($ench);
 
+	    foreach($images as $image) {
+		    $fichier = md5(uniqid()) . '.' . $image->guessExtension();
+		    $image->move(
+			    $this->getParameter('images_directory'),
+			    $fichier
+		    );
+		    $img = new Images();
+		    $img->setNom($fichier);
+		    $article->addImage($img);
+	    }
+	    $em->persist($article);
+	    $em->flush();
+	    return $this->handleView
+	    ($this->view(['message'=>'article enregistré'], Response::HTTP_CREATED));}
+ 
+ 
     /**
-     * @Route("/{id}/edit", name="app_article_edit", methods={"GET", "POST"})
+     *  creation article
+     * @param Request $request
+     * @return \FOS\RestBundle\View\View|Response
+     * @Route("/article/{article}", name="article_edit", methods={"PUT"})
      */
- /*   public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
+    public function edit(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $articleRepository->add($article);
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('article/edit.html.twig', [
-            'article' => $article,
-            'form' => $form->createView(),
-        ]);
+	    // erreur
+	    $art = $this->getDoctrine()->getRepository
+	    (Article::class)->find($article);
+	    $parameter = json_decode($request->getContent(),true);
+	    $art->setTitre($parameter['contexte']);
+	    $art->setDescription(['description']);
+	    $art->setPrixInitial(['prixInitial']);
+	    $art->setCategorie(['categorie']);
+	    $em = $this->getDoctrine()->getManager();
+	    $em->persist($art);
+	    $em->flush();
+	    return $this->handleView($this->view(['message'=> 'article Modifie' ], Response::HTTP_CREATED));
+	
     }
-
-    /**
-     * @Route("/{id}", name="app_article_delete", methods={"POST"})
-     */
-/*public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
+	
+	/** suppression article
+	 * @param Request $request
+	 * @Rest\Delete("/article/{article}")
+	 * @return \FOS\RestBundle\View\View|Response
+	 */
+    public function delete(Request $request,$article) :Response
     {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
-            $articleRepository->remove($article);
-        }
-
-        return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+	    $art = $this->getDoctrine()->getRepository
+	    (Article::class)->find($article);
+	    $em = $this->getDoctrine()->getManager();
+	    $em->remove($art);
+	    $em->flush();
+	    return $this->json('Article supprimé');
     }
-*/}
+}

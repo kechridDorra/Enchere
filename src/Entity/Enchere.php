@@ -22,20 +22,8 @@ class Enchere
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $description;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $dateDebut;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $DateFin;
-
- 
-
+   
+    
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")
      */
@@ -51,6 +39,21 @@ class Enchere
      */
     private $articles;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $descriptionEnch;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateDebut;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $dateFin;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -61,67 +64,8 @@ class Enchere
     {
         return $this->id;
     }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    public function getDateDebut(): ?\DateTimeInterface
-    {
-        return $this->dateDebut;
-    }
-
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
-    {
-        $this->dateDebut = $dateDebut;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?string
-    {
-        return $this->DateFin;
-    }
-
-    public function setDateFin(string $DateFin): self
-    {
-        $this->DateFin = $DateFin;
-
-        return $this;
-    }
-
-    public function getHeureDebut(): ?int
-    {
-        return $this->heureDebut;
-    }
-
-    public function setHeureDebut(int $heureDebut): self
-    {
-        $this->heureDebut = $heureDebut;
-
-        return $this;
-    }
-
-    public function getHeureFin(): ?int
-    {
-        return $this->heureFin;
-    }
-
-    public function setHeureFin(int $heureFin): self
-    {
-        $this->heureFin = $heureFin;
-
-        return $this;
-    }
-
+    
+    
     /**
      * @return Collection<int, User>
      */
@@ -187,6 +131,42 @@ class Enchere
                 $article->setEnchere(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescriptionEnch(): ?string
+    {
+        return $this->descriptionEnch;
+    }
+
+    public function setDescriptionEnch(string $descriptionEnch): self
+    {
+        $this->descriptionEnch = $descriptionEnch;
+
+        return $this;
+    }
+
+    public function getDateDebut(): ?\DateTimeInterface
+    {
+        return $this->dateDebut;
+    }
+
+    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    {
+        $this->dateDebut = $dateDebut;
+
+        return $this;
+    }
+
+    public function getDateFin(): ?\DateTimeInterface
+    {
+        return $this->dateFin;
+    }
+
+    public function setDateFin(\DateTimeInterface $dateFin): self
+    {
+        $this->dateFin = $dateFin;
 
         return $this;
     }

@@ -9,7 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Nom</th>
+                <th>Titre</th>
+                <th>Description</th>
                 <th>PrixInitial</th>
                 <th>actions</th>
             </tr>
@@ -18,7 +19,8 @@
         {% for article in articles %}
             <tr>
                 <td>{{ article.id }}</td>
-                <td>{{ article.nom }}</td>
+                <td>{{ article.titre }}</td>
+                <td>{{ article.description }}</td>
                 <td>{{ article.prixInitial }}</td>
                 <td>
                     <a href="{{ path('app_article_show', {'id': article.id}) }}">show</a>
@@ -27,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

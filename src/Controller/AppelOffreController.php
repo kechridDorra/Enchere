@@ -78,7 +78,6 @@ class AppelOffreController extends AbstractFOSRestController
 	 */
 	public function list()
 	{
-		
 		$repository = $this->getDoctrine()->getRepository(AppelOffre::class);
 		$appelOffres = $repository->findAll();
 		return $this->handleView($this->view($appelOffres));
@@ -90,7 +89,8 @@ class AppelOffreController extends AbstractFOSRestController
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function new(Request $request)
-	{   $user = $this->getUser();
+	{
+		$user = $this->getUser();
 		$em = $this->getDoctrine()->getManager();
 		$contexte = $request->get('contexte');
 		$dateExp = $request ->get('dateExp');

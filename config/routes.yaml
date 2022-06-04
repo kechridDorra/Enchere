@@ -7,3 +7,4 @@ api_login_check:
 
 api_register:
   path: /api/
+
