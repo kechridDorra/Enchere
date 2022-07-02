@@ -18,9 +18,7 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-/**
- * @Route("/api")
- */
+
 class AppelOffreController extends AbstractFOSRestController
 {
 	/**
@@ -59,10 +57,10 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	/** get appels selon user
 	 * @param Request $request
-	 * @Rest\Get("/appelOffre", name="appel_offre_get")
+	 * @Rest\Get("/api/appelOffre", name="appel_offre_user")
 	 *  @return Response
 	 */
-	public function getAppel()
+	public function AppelOffreUser()
 	{
 		$user= $this->getUser();
 		$appelOffres=$user->getAppelOffres();
@@ -85,7 +83,7 @@ class AppelOffreController extends AbstractFOSRestController
 	
 	/** creation appelOffre
 	 * @param Request $request
-	 * @Rest\Post("/appelOffre")
+	 * @Rest\Post("/api/appelOffre")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function new(Request $request)
@@ -107,7 +105,7 @@ class AppelOffreController extends AbstractFOSRestController
 	
 	/** suppression Appel offre
 	 * @param Request $request
-	 * @Rest\Delete("/appelOffre/{appelOffre}")
+	 * @Rest\Delete("/api/appelOffre/{appelOffre}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function deleteAppelOffre($appelOffre):Response
@@ -122,7 +120,7 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	/** modification appel offre
 	 * @param Request $request
-	 * @Rest\Put("/appelOffre/{appelOffre}")
+	 * @Rest\Put("/api/appelOffre/{appelOffre}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function update(Request $request,$appelOffre):Response
@@ -150,7 +148,6 @@ class AppelOffreController extends AbstractFOSRestController
 	{
 		$data = $this->getDoctrine()->getRepository
 		(AppelOffre::class)->find($appelOffre);
-		return $this->view($data, Response::HTTP_OK);
 		$propositions = $data->getPropositions();
 		return $this->handleView($this->view($propositions));
 	}

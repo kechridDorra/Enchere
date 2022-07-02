@@ -45,10 +45,10 @@ class EnchereRepository extends ServiceEntityRepository
         }
     }
 
-    // /**
+    /**
     //  * @return Enchere[] Returns an array of Enchere objects
     //  */
-    /*
+    
     public function findByExampleField($value)
     {
         return $this->createQueryBuilder('e')
@@ -60,9 +60,9 @@ class EnchereRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    */
+    
 
-    /*
+    
     public function findOneBySomeField($value): ?Enchere
     {
         return $this->createQueryBuilder('e')
@@ -72,5 +72,5 @@ class EnchereRepository extends ServiceEntityRepository
             ->getOneOrNullResult()
         ;
     }
-    */
+    
 }

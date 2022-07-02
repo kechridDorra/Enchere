@@ -16,11 +16,13 @@ class Images
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $nom;
+	
+	/**
+	 * @var string $url
+	 *
+	 * @ORM\Column(name="url", type="string", length=255)
+	 */
+	private $url;
 
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="images")
@@ -32,14 +34,14 @@ class Images
         return $this->id;
     }
 
-    public function getNom(): ?string
+    public function getUrl(): ?string
     {
-        return $this->nom;
+        return $this->url;
     }
 
-    public function setNom(string $nom): self
+    public function setUrl(string $url): self
     {
-        $this->nom = $nom;
+        $this->url = $url;
 
         return $this;
     }

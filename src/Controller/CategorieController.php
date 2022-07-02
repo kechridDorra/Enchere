@@ -13,9 +13,7 @@
 	use Symfony\Component\Routing\Annotation\Route;
 	use FOS\RestBundle\Controller\Annotations as Rest;
 	
-	/**
-	 * @Route("/api")
-	 */
+	
 	class CategorieController extends AbstractFOSRestController
 	{
 		/**
@@ -50,7 +48,6 @@
 			(Categorie::class)->find($categorie);
 			return $this->view($data, Response::HTTP_OK);
 		}
-	
 		
 		
 		/**
@@ -74,7 +71,7 @@
 		 */
 		public function new(Request $request)
 		{
-		
+			
 			$em = $this->getDoctrine()->getManager();
 			$nom = $request->get('nom');
 			$categorie = new Categorie();
@@ -84,39 +81,114 @@
 			return $this->handleView
 			($this->view(['message' => 'categorie enregistré'], Response::HTTP_CREATED));
 		}
-		
-		
-		/** modification vendeur
+		/**
 		 * @param Request $request
-		 * @Rest\Put("/profilVendeur")
-		 * @return \FOS\RestBundle\View\View|Response
+		 * @Rest\Get("/categorie1", name="categorie_1")
+		 * @return \FOS\RestBundle\View\View
 		 */
-		/*public function update(Request $request):Response
+		public function getCategorie1()
 		{
-			$user = $this->getUser();
-			$profilVendeur=$this->getUser()->getProfilVendeur();
-			$parameter = json_decode($request->getContent(),true);
-			$profilVendeur->setActivite($parameter['activite']);
-			$profilVendeur->setNomEntreprise($parameter['nomEntreprise']);
-			$em = $this->getDoctrine()->getManager();
-			$em->persist($profilVendeur);
-			$em->flush();
-			return $this->handleView($this->view(['message'=> 'Vendeur Modifie' ], Response::HTTP_CREATED));
+			$categorie = 1;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		/**
+		 * @param Request $request
+		 * @Rest\Get("/categorie2", name="categorie_2")
+		 * @return \FOS\RestBundle\View\View
+		 */
+		public function getCategorie2()
+		{
+			$categorie = 2;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		/**
+		 * @param Request $request
+		 * @Rest\Get("/categorie3", name="categorie_3")
+		 * @return \FOS\RestBundle\View\View
+		 */
+		public function getCategorie3()
+		{
+			$categorie = 3;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		/**
+		 * @param Request $request
+		 * @Rest\Get("/categorie4", name="categorie_4")
+		 * @return \FOS\RestBundle\View\View
+		 */
+		public function getCategorie4()
+		{
+			$categorie = 4;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		/**
+		 * @param Request $request
+		 * @Rest\Get("/categorie5", name="categorie_5")
+		 * @return \FOS\RestBundle\View\View
+		 */
+		public function getCategorie5()
+		{
+			$categorie = 5;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}/**
+	 * @param Request $request
+	 * @Rest\Get("/categorie6", name="categorie_6")
+	 * @return \FOS\RestBundle\View\View
+	 */
+		public function getCategorie6()
+		{
+			$categorie = 6;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		/**
+	 * @param Request $request
+	 * @Rest\Get("/categorie7", name="categorie_7")
+	 * @return \FOS\RestBundle\View\View
+	 */
+		public function getCategorie7()
+		{
+			$categorie = 7;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
 		}
 		
-		/** suppression Vendeur
+		/**
 		 * @param Request $request
-		 * @Rest\Delete("/profilVendeur/{profilVendeur}")
-		 * @return \FOS\RestBundle\View\View|Response
+		 * @Rest\Get("/categorie8", name="categorie_8")
+		 * @return \FOS\RestBundle\View\View
 		 */
-	/*	public function deleteVendeur($profilVendeur):Response
+		public function getCategorie8()
 		{
-			$user = $this->getUser();
-			$profilVendeur = $this->getDoctrine()->getRepository
-			(ProfilVendeur::class)->find($profilVendeur);
-			$em = $this->getDoctrine()->getManager();
-			$em->remove($profilVendeur);
-			$em->flush();
-			return $this->json('Vendeur supprimé');
-		}*/
+			$categorie = 8;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
+		
+		/**
+		 * @param Request $request
+		 * @Rest\Get("/categorie9", name="categorie_9")
+		 * @return \FOS\RestBundle\View\View
+		 */
+		public function getCategorie9()
+		{
+			$categorie = 9;
+			$data = $this->getDoctrine()->getRepository
+			(Categorie::class)->find($categorie);
+			return $this->view($data, Response::HTTP_OK);
+		}
 	}
+	

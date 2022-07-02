@@ -14,19 +14,19 @@ class ArticleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('titre')
-            ->add('description')
-            ->add('prixInitial')
-	        ->add('categorie',EntityType::class,[
-	        	'class'=>Categorie::class
-	        ])
-	        ->add('images',FileType::class,
-		        [   'required'=>false,
-			        'multiple'=>true,
-			        'mapped'=>false
-		        ])
-        ;
+	   
+	    $builder
+		    ->add('titre')
+		    ->add('description')
+		    ->add('prixInitial')
+		    ->add('categorie', EntityType::class, [
+			    'class' => Categorie::class
+		    ])
+		    ->add('images', FileType::class,
+			    ['required' => false,
+				    'multiple' => true,
+				    'mapped' => false
+			    ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

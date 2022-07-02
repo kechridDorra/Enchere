@@ -6,6 +6,7 @@ use App\Repository\EnchereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * @ORM\Entity(repositoryClass=EnchereRepository::class)
@@ -18,11 +19,6 @@ class Enchere
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-   
     
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")
@@ -46,13 +42,20 @@ class Enchere
 
     /**
      * @ORM\Column(type="datetime")
+     * @var string A "Y-m-d H:i:s" formatted value
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="datetime")
+     * @var string A "Y-m-d H:i:s" formatted value
      */
     private $dateFin;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $statut;
 
     public function __construct()
     {
@@ -167,6 +170,18 @@ class Enchere
     public function setDateFin(\DateTimeInterface $dateFin): self
     {
         $this->dateFin = $dateFin;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(string $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

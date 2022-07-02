@@ -52,10 +52,6 @@ class User implements UserInterface
 	 */
 	private $prenom;
 	
-	/**
-	 * @ORM\Column(type="string", length=255)
-	 */
-	private $genre;
 	
 	/**
 	 * @ORM\Column(type="string", length=255)
@@ -122,33 +118,32 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $isVerified = false;
-	
-	
-	
-	
+
+    
+    
 	public function __construct()
-                           	{
-                           		$this->notifications = new ArrayCollection();
-                           		$this->appelOffres = new ArrayCollection();
-                           		$this->encheres = new ArrayCollection();
-                           	}
+                                    	{
+                                    		$this->notifications = new ArrayCollection();
+                                    		$this->appelOffres = new ArrayCollection();
+                                    		$this->encheres = new ArrayCollection();
+                                    	}
 	
 	public function getId(): ?int
-                           	{
-                           		return $this->id;
-                           	}
+                                    	{
+                                    		return $this->id;
+                                    	}
 	
 	public function getEmail(): ?string
-                           	{
-                           		return $this->email;
-                           	}
+                                    	{
+                                    		return $this->email;
+                                    	}
 	
 	public function setEmail(string $email): self
-                           	{
-                           		$this->email = $email;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->email = $email;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * A visual identifier that represents this user.
@@ -156,42 +151,42 @@ class User implements UserInterface
 	 * @see UserInterface
 	 */
 	public function getUsername(): string
-                           	{
-                           		return (string)$this->email;
-                           	}
+                                    	{
+                                    		return (string)$this->email;
+                                    	}
 	
 	/**
 	 * @see UserInterface
 	 */
 	public function getRoles(): array
-                           	{
-                           		$roles = $this->roles;
-                           		// guarantee every user at least has ROLE_USER
-                           		$roles[] = 'ROLE_USER';
-                           		
-                           		return array_unique($roles);
-                           	}
+                                    	{
+                                    		$roles = $this->roles;
+                                    		// guarantee every user at least has ROLE_USER
+                                    		$roles[] = 'ROLE_USER';
+                                    		
+                                    		return array_unique($roles);
+                                    	}
 	
 	public function setRoles(array $roles): self
-                           	{
-                           		$this->roles = $roles;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->roles = $roles;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * @see UserInterface
 	 */
 	public function getPassword(): string
-                           	{
-                           		return (string)$this->password;
-                           	}
+                                    	{
+                                    		return (string)$this->password;
+                                    	}
 	
 	public function setPassword(string $password): self
-                           	{
-                           		$this->password = $password;
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->password = $password;
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * Returning a salt is only needed, if you are not using a modern
@@ -200,247 +195,237 @@ class User implements UserInterface
 	 * @see UserInterface
 	 */
 	public function getSalt(): ?string
-                           	{
-                           		return null;
-                           	}
+                                    	{
+                                    		return null;
+                                    	}
 	
 	/**
 	 * @see UserInterface
 	 */
 	public function eraseCredentials()
-                           	{
-                           		// If you store any temporary, sensitive data on the user, clear it here
-                           		// $this->plainPassword = null;
-                           	}
+                                    	{
+                                    		// If you store any temporary, sensitive data on the user, clear it here
+                                    		// $this->plainPassword = null;
+                                    	}
 	
 	public function getNom(): ?string
-                           	{
-                           		return $this->nom;
-                           	}
+                                    	{
+                                    		return $this->nom;
+                                    	}
 	
 	public function setNom(string $nom): self
-                           	{
-                           		$this->nom = $nom;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->nom = $nom;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getPrenom(): ?string
-                           	{
-                           		return $this->prenom;
-                           	}
+                                    	{
+                                    		return $this->prenom;
+                                    	}
 	
 	public function setPrenom(string $prenom): self
-                           	{
-                           		$this->prenom = $prenom;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->prenom = $prenom;
+                                    		
+                                    		return $this;
+                                    	}
 	
-	public function getGenre(): ?string
-                           	{
-                           		return $this->genre;
-                           	}
 	
-	public function setGenre(string $genre): self
-                           	{
-                           		$this->genre = $genre;
-                           		
-                           		return $this;
-                           	}
 	
 	public function getAdresse(): ?string
-                           	{
-                           		return $this->adresse;
-                           	}
+                                    	{
+                                    		return $this->adresse;
+                                    	}
 	
 	public function setAdresse(string $adresse): self
-                           	{
-                           		$this->adresse = $adresse;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->adresse = $adresse;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getCodePostal(): ?int
-                           	{
-                           		return $this->codePostal;
-                           	}
+                                    	{
+                                    		return $this->codePostal;
+                                    	}
 	
 	public function setCodePostal(int $codePostal): self
-                           	{
-                           		$this->codePostal = $codePostal;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->codePostal = $codePostal;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getVille(): ?string
-                           	{
-                           		return $this->ville;
-                           	}
+                                    	{
+                                    		return $this->ville;
+                                    	}
 	
 	public function setVille(string $ville): self
-                           	{
-                           		$this->ville = $ville;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->ville = $ville;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	
 	public function getNumeroCarte(): ?string
-                           	{
-                           		return $this->numeroCarte;
-                           	}
+                                    	{
+                                    		return $this->numeroCarte;
+                                    	}
 	
 	public function setNumeroCarte(string $numeroCarte): self
-                           	{
-                           		$this->numeroCarte = $numeroCarte;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->numeroCarte = $numeroCarte;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getCodeSecurite(): ?string
-                           	{
-                           		return $this->codeSecurite;
-                           	}
+                                    	{
+                                    		return $this->codeSecurite;
+                                    	}
 	
 	public function setCodeSecurite(string $codeSecurite): self
-                           	{
-                           		$this->codeSecurite = $codeSecurite;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->codeSecurite = $codeSecurite;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getProfilVendeur(): ?ProfilVendeur
-                           	{
-                           		return $this->profilVendeur;
-                           	}
+                                    	{
+                                    		return $this->profilVendeur;
+                                    	}
 	
 	public function setProfilVendeur(?ProfilVendeur $profilVendeur): self
-                           	{
-                           		$this->profilVendeur = $profilVendeur;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->profilVendeur = $profilVendeur;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * @return Collection<int, Notification>
 	 */
 	public function getNotifications(): Collection
-                           	{
-                           		return $this->notifications;
-                           	}
+                                    	{
+                                    		return $this->notifications;
+                                    	}
 	
 	public function addNotification(Notification $notification): self
-                           	{
-                           		if (!$this->notifications->contains($notification)) {
-                           			$this->notifications[] = $notification;
-                           			$notification->setUser($this);
-                           		}
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		if (!$this->notifications->contains($notification)) {
+                                    			$this->notifications[] = $notification;
+                                    			$notification->setUser($this);
+                                    		}
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function removeNotification(Notification $notification): self
-                           	{
-                           		if ($this->notifications->removeElement($notification)) {
-                           			// set the owning side to null (unless already changed)
-                           			if ($notification->getUser() === $this) {
-                           				$notification->setUser(null);
-                           			}
-                           		}
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		if ($this->notifications->removeElement($notification)) {
+                                    			// set the owning side to null (unless already changed)
+                                    			if ($notification->getUser() === $this) {
+                                    				$notification->setUser(null);
+                                    			}
+                                    		}
+                                    		
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * @return Collection<int, AppelOffre>
 	 */
 	public function getAppelOffres(): Collection
-                           	{
-                           		return $this->appelOffres;
-                           	}
+                                    	{
+                                    		return $this->appelOffres;
+                                    	}
 	
 	public function addAppelOffre(AppelOffre $appelOffre): self
-                           	{
-                           		if (!$this->appelOffres->contains($appelOffre)) {
-                           			$this->appelOffres[] = $appelOffre;
-                           			$appelOffre->setUser($this);
-                           		}
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		if (!$this->appelOffres->contains($appelOffre)) {
+                                    			$this->appelOffres[] = $appelOffre;
+                                    			$appelOffre->setUser($this);
+                                    		}
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function removeAppelOffre(AppelOffre $appelOffre): self
-                           	{
-                           		if ($this->appelOffres->removeElement($appelOffre)) {
-                           			// set the owning side to null (unless already changed)
-                           			if ($appelOffre->getUser() === $this) {
-                           				$appelOffre->setUser(null);
-                           			}
-                           		}
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		if ($this->appelOffres->removeElement($appelOffre)) {
+                                    			// set the owning side to null (unless already changed)
+                                    			if ($appelOffre->getUser() === $this) {
+                                    				$appelOffre->setUser(null);
+                                    			}
+                                    		}
+                                    		
+                                    		return $this;
+                                    	}
 	
 	/**
 	 * @return Collection<int, Enchere>
 	 */
 	public function getEncheres(): Collection
-                           	{
-                           		return $this->encheres;
-                           	}
+                                    	{
+                                    		return $this->encheres;
+                                    	}
 	
 	public function addEnchere(Enchere $enchere): self
-                           	{
-                           		if (!$this->encheres->contains($enchere)) {
-                           			$this->encheres[] = $enchere;
-                           		}
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		if (!$this->encheres->contains($enchere)) {
+                                    			$this->encheres[] = $enchere;
+                                    		}
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function removeEnchere(Enchere $enchere): self
-                           	{
-                           		$this->encheres->removeElement($enchere);
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->encheres->removeElement($enchere);
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getTelephone(): ?string
-                           	{
-                           		return $this->telephone;
-                           	}
+                                    	{
+                                    		return $this->telephone;
+                                    	}
 	
 	public function setTelephone(string $telephone): self
-                           	{
-                           		$this->telephone = $telephone;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->telephone = $telephone;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getDateExp(): ?\DateTimeInterface
-                           	{
-                           		return $this->dateExp;
-                           	}
+                                    	{
+                                    		return $this->dateExp;
+                                    	}
 	
 	public function setDateExp(\DateTimeInterface $dateExp): self
-                           	{
-                           		$this->dateExp = $dateExp;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->dateExp = $dateExp;
+                                    		
+                                    		return $this;
+                                    	}
 	
 	public function getMoisEXp(): ?int
-                           	{
-                           		return $this->moisEXp;
-                           	}
+                                    	{
+                                    		return $this->moisEXp;
+                                    	}
 	
 	public function setMoisEXp(int $moisEXp): self
-                           	{
-                           		$this->moisEXp = $moisEXp;
-                           		
-                           		return $this;
-                           	}
+                                    	{
+                                    		$this->moisEXp = $moisEXp;
+                                    		
+                                    		return $this;
+                                    	}
 
     public function getAnneeExp(): ?int
     {
@@ -470,5 +455,6 @@ class User implements UserInterface
     {
         return $this->isVerified;
     }
-	
+
+   
 }

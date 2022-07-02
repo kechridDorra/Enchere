@@ -45,6 +45,7 @@ security:
         - { path: ^/api/login_check;, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/encheres, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/api/user, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/api/article, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
