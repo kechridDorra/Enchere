@@ -3,7 +3,7 @@
 #    controller: App\Controller\DefaultController::index
 api_login_check:
   path: /api/login_check
-  controller: App\Controller\UserController::getTokenUser
+  controller: App\Controller\UserController
 
 api_register:
   path: /api/

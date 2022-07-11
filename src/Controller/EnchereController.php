@@ -54,21 +54,21 @@ class EnchereController extends AbstractFOSRestController
 	/**
 	 * @param Request $request
 	 * @Rest\Get("/enchere/{id}", name="enchere_show")
-	 * @return \FOS\RestBundle\View\View
+	 * @return Response
 	 */
-	public function show(Enchere $id)
+	public function getEnchereById(Enchere $id)
 	{
 		$data = $this->getDoctrine()->getRepository
 		(Enchere::class)->find($id);
-		return $this->view($data, Response::HTTP_OK);
+		return $this->handleView($this->view($data));
 	}
 	
 	/** get appels selon le  vendeur
 	 * @param Request $request
-	 * @Rest\Get("/api/enchere", name="enchere_vendeur")
+	 * @Rest\Get("/api/enchereByVendeur", name="enchere_vendeur")
 	 * @return Response
 	 */
-	public function enchereVendeur()
+	public function getEncherebyVendeur()
 	{
 		$profilVendeur = $this->getUser()->getProfilVendeur();
 		$encheres = $profilVendeur->getEncheres();
@@ -106,7 +106,7 @@ class EnchereController extends AbstractFOSRestController
 	
 	/** modification appel offre
 	 * @param Request $request
-	 * @Rest\Put("/api/enchere/{enchere}")
+	 * @Rest\Patch("/api/enchere/{enchere}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function update(Request $request, $enchere): Response
@@ -122,7 +122,7 @@ class EnchereController extends AbstractFOSRestController
 		$enchere->setDescriptionEnch($parameter['descriptionEnch']);
 		$enchere->setDateDebut(new \DateTime($dateDebut));
 		$enchere->setDateFin(new \DateTime($dateFin));
-		$enchere->setDateFin($statut);
+	
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($enchere);
 		$em->flush();
@@ -148,14 +148,14 @@ class EnchereController extends AbstractFOSRestController
 	
 	/** liste des user selon chaque enchere
 	 * @Rest\Get("/listRejoint/{enchere}", name="liste_rejoint")
-	 * @return \FOS\RestBundle\View\View
+	 * @return Response
 	 */
-	public function listUser($enchere)
+	public function listUserByEnchere($enchere)
 	{
 		$enchere = $this->getDoctrine()->getRepository
 	(Enchere::class)->find($enchere);
 		$list = $enchere->getUsers();
-		return $this->view($list, Response::HTTP_OK);
+		return $this->handleView($this->view($list));
 	}
 	
 	/** liste des enchere selon chaque user
@@ -172,7 +172,7 @@ class EnchereController extends AbstractFOSRestController
 	
 	/** liste des encheres terminee
 	 * @Rest\Get("/encheresTerminees", name="liste_enchere_termine")
-	 * @return \FOS\RestBundle\View\View
+	 * @return Response
 	 */
 	public function termine (EnchereRepository $enchereRepository)
 	{
@@ -182,11 +182,11 @@ class EnchereController extends AbstractFOSRestController
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
-		return $this->view($list,Response::HTTP_OK);
+		return $this->handleView($this->view($list));
 	}
 	/** liste des encheres terminee
 	 * @Rest\Get("/encheresPlanifiees", name="liste_enchere_planifie")
-	 * @return \FOS\RestBundle\View\View
+	 * @return Response
 	 */
 	public function planifie (EnchereRepository $enchereRepository)
 	{
@@ -196,12 +196,12 @@ class EnchereController extends AbstractFOSRestController
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
-		return $this->view($list,Response::HTTP_OK);
+		return $this->handleView($this->view($list));
 	}
 	
 	/** liste des encheres enCours
 	 * @Rest\Get("/encheresEnCours", name="liste_enchere_enCours")
-	 * @return \FOS\RestBundle\View\View
+	 * @return Response
 	 */
 	public function enCours (EnchereRepository $enchereRepository)
 	{
@@ -214,7 +214,7 @@ class EnchereController extends AbstractFOSRestController
 			->getQuery()
 			->getResult();
 		
-		return $this->view($list,Response::HTTP_OK);
+		return $this->handleView($this->view($list));
 	}
 	
 	

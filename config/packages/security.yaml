@@ -46,10 +46,9 @@ security:
         - { path: ^/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/users, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/encheres, roles: IS_AUTHENTICATED_ANONYMOUSLY}
-        - { path: ^/api/user, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api/article, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY  }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/api, roles: ROLE_USER }
+
 
     role_hierarchy:
         ROLE_EDITOR: ROLE_USER

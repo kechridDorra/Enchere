@@ -141,7 +141,7 @@
 		 * @Rest\Delete("/api/article/{article}" name=""supp_article)
 		 * @return \FOS\RestBundle\View\View|Response
 		 */
-		public function delete(Request $request,$article) :Response
+	/*	public function delete(Request $request,$article) :Response
 		{
 			$art = $this->getDoctrine()->getRepository
 			(Article::class)->find($article);
@@ -151,7 +151,7 @@
 			return $this->json('Article supprimé');
 		}
 	
-	
+	*/
 	/** liste des article selon categorie
 	 * @Rest\Get("/articleCategorie/{categorie}", name="liste_article_cat")
 	 * @return \FOS\RestBundle\View\View|Response
@@ -173,9 +173,8 @@
 		$repository = $this->getDoctrine()->getRepository(Article::class);
 		$articles = $repository->findAll();
 		$dd =$articles->getEnchere();
-		return $this->handleView($this->view($dd));
-	}
-	
+		return $this->handleView($this->view($dd)); }
+	  
 	/**
 	 * modifier prix article 50
 	 * @param Request $request
@@ -184,7 +183,7 @@
 	 * @return \FOS\RestBundle\View\View
 	 */
 	public function augmenterPrix50(Request $request, Article $id, ArticleRepository $articleRepository): Response
-	{   $user = $this->getUser();
+	{ /*  $user = $this->getUser();
 		$art = $this->getDoctrine()->getRepository
 	(Article::class)->find($id);
 		$parameter = json_decode($request->getContent(),true);
@@ -194,10 +193,8 @@
 	    $em = $this->getDoctrine()->getManager();
 	    $em->flush(); 
 	return $this->handleView($this->view(['message'=> 'prix Modifie' ], Response::HTTP_CREATED));
-		                                                
+		*/
 	}
-	
-	
 	/**
 	 * modifier prix article100
 	 * @param Request $request

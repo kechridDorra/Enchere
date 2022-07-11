@@ -91,14 +91,26 @@
 		
 		/** affichage utilisateur
 		 * @Rest\Get("/api/user/{id}", name="profil_user")
-		 * @return \FOS\RestBundle\View\View
+		 * @return Response
 		 */
-		public function getprofil($id)
+		public function getUserbyId($id)
 		{
 			$data = $this->getDoctrine()->getRepository
 			(User::class)->find($id);
-			return $this->view($data, Response::HTTP_OK);
+			return $this->handleView($this->view($data));
 		}
+		
+		/** affichage utilisateur
+		 * @Rest\Get("/api/user/mail/{email}", name="dtail_user")
+		 * @return Response
+		 */
+		public function getUserbyEmail($email,UserRepository $repository)
+		{
+			
+			$data = $repository->findByEmail($email);
+			 return $this->handleView($this->view($data));
+		}
+	
 		
 		/** creation utilisateur
 		 * @param Request $request
@@ -148,7 +160,7 @@
 		
 		/** modification user
 		 * @param Request $request
-		 * @Rest\Put("/api/user/{id}")
+		 * @Rest\Patch("/api/user/{id}")
 		 * @return \FOS\RestBundle\View\View|Response
 		 */
 		public function update(Request $request, $id): Response
