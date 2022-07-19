@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\AppelOffre;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use DateTimeInterface;
 use App\Form\AppelOffreType;
 use App\Repository\AppelOffreRepository;
@@ -17,6 +18,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 
 class AppelOffreController extends AbstractFOSRestController
@@ -57,10 +59,10 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	/** get appels selon user
 	 * @param Request $request
-	 * @Rest\Get("/api/appelOffre", name="appel_offre_user")
+	 * @Rest\Get("/api/appelOffres", name="appel_offre_user")
 	 *  @return Response
 	 */
-	public function AppelOffreUser()
+	public function AppelOffreByUser()
 	{
 		$user= $this->getUser();
 		$appelOffres=$user->getAppelOffres();
@@ -80,6 +82,9 @@ class AppelOffreController extends AbstractFOSRestController
 		$appelOffres = $repository->findAll();
 		return $this->handleView($this->view($appelOffres));
 	}
+	
+	
+	
 	
 	/** creation appelOffre
 	 * @param Request $request
@@ -152,6 +157,35 @@ class AppelOffreController extends AbstractFOSRestController
 		return $this->handleView($this->view($propositions));
 	}
 	
+	/** liste des appels offres expiré
+	 * @Rest\Get("/api/appelOffresExp", name="appel_offre_expire")
+	 * @return Response
+	 */
+	public function Expire (AppelOffreRepository $appelOffreRepository)
+	{
+		$dateNow = new \DateTime();
+		$list =$appelOffreRepository->createQueryBuilder('e')
+			->andWhere('e.dateExp < :date')
+			->setParameter('date', $dateNow)
+			->getQuery()
+			->getResult();
+		return $this->handleView($this->view($list));
+	}
+	
+	/** liste des appels offres dispo
+	 * @Rest\Get("/api/appelOffresDispo", name="appel_offre_disponible")
+	 * @return Response
+	 */
+	public function Disponible (AppelOffreRepository $appelOffreRepository)
+	{
+		$dateNow = new \DateTime();
+		$list =$appelOffreRepository->createQueryBuilder('e')
+			->andWhere('e.dateExp >= :date')
+			->setParameter('date', $dateNow)
+			->getQuery()
+			->getResult();
+		return $this->handleView($this->view($list));
+	}
 	
 	
 }

@@ -26,7 +26,8 @@ class ArticleType extends AbstractType
 			    ['required' => false,
 				    'multiple' => true,
 				    'mapped' => false
-			    ]);
+			    ])
+	        ->add('image', FileType::class, array('label'=>'Upload Image'));
     }
 
     public function configureOptions(OptionsResolver $resolver): void

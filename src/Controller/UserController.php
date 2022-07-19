@@ -108,9 +108,8 @@
 		{
 			
 			$data = $repository->findByEmail($email);
-			 return $this->handleView($this->view($data));
+			return $this->handleView($this->view($data));
 		}
-	
 		
 		/** creation utilisateur
 		 * @param Request $request

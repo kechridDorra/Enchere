@@ -66,7 +66,6 @@
 			$articles = $repository->findAll();
 			return $this->handleView($this->view($articles));
 		}
-		
 		/** creation article
 		 * @param Request $request
 		 * @Route("/api/article/{enchere}", name="app_article_new", methods={"POST"})
@@ -104,13 +103,14 @@
 				$article->addImage($img);
 			}
 			
-		
+			
 			$em->persist($article);
 			$em->flush();
 			return $this->handleView
-				($this->view(['message' => 'Article enregistré'], Response::HTTP_CREATED));}
-			
-			
+			($this->view(['message' => 'Article enregistré'], Response::HTTP_CREATED));}
+		
+		
+		
 		
 		
 		/**
