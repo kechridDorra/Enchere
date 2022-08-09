@@ -19,11 +19,6 @@ class Enchere
      * @ORM\Column(type="integer")
      */
     private $id;
-    
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")
-     */
-    private $users;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProfilVendeur::class, inversedBy="encheres")
@@ -38,29 +33,47 @@ class Enchere
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $descriptionEnch;
+    private $description_ench;
 
     /**
      * @ORM\Column(type="datetime")
      * @var string A "Y-m-d H:i:s" formatted value
      */
-    private $dateDebut;
+    private $date_debut;
 
     /**
      * @ORM\Column(type="datetime")
      * @var string A "Y-m-d H:i:s" formatted value
      */
-    private $dateFin;
+    private $date_fin;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")
      */
-    private $statut;
+    private $users;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Participation::class, mappedBy="enchere")
+     */
+    private $participations;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $prix_depart;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $prix_vente;
+
+    
 
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->participations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -77,24 +90,6 @@ class Enchere
         return $this->users;
     }
 
-    public function addUser(User $user): self
-    {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addEnchere($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): self
-    {
-        if ($this->users->removeElement($user)) {
-            $user->removeEnchere($this);
-        }
-
-        return $this;
-    }
 
     public function getProfilVendeur(): ?ProfilVendeur
     {
@@ -140,49 +135,112 @@ class Enchere
 
     public function getDescriptionEnch(): ?string
     {
-        return $this->descriptionEnch;
+        return $this->description_ench;
     }
 
-    public function setDescriptionEnch(string $descriptionEnch): self
+    public function setDescriptionEnch(string $description_ench): self
     {
-        $this->descriptionEnch = $descriptionEnch;
+        $this->description_ench = $description_ench;
 
         return $this;
     }
 
     public function getDateDebut(): ?\DateTimeInterface
     {
-        return $this->dateDebut;
+        return $this->date_debut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    public function setDateDebut(\DateTimeInterface $date_debut): self
     {
-        $this->dateDebut = $dateDebut;
+        $this->date_debut = $date_debut;
 
         return $this;
     }
 
     public function getDateFin(): ?\DateTimeInterface
     {
-        return $this->dateFin;
+        return $this->date_fin;
     }
 
-    public function setDateFin(\DateTimeInterface $dateFin): self
+    public function setDateFin(\DateTimeInterface $date_fin): self
     {
-        $this->dateFin = $dateFin;
+        $this->date_fin = $date_fin;
 
         return $this;
     }
 
-    public function getStatut(): ?string
+    public function addUser(User $user): self
     {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): self
-    {
-        $this->statut = $statut;
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addEnchere($this);
+        }
 
         return $this;
     }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeEnchere($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participation>
+     */
+    public function getParticipations(): Collection
+    {
+        return $this->participations;
+    }
+
+    public function addParticipation(Participation $participation): self
+    {
+        if (!$this->participations->contains($participation)) {
+            $this->participations[] = $participation;
+            $participation->setEnchere($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipation(Participation $participation): self
+    {
+        if ($this->participations->removeElement($participation)) {
+            // set the owning side to null (unless already changed)
+            if ($participation->getEnchere() === $this) {
+                $participation->setEnchere(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPrixDepart(): ?float
+    {
+        return $this->prix_depart;
+    }
+
+    public function setPrixDepart(float $prix_depart): self
+    {
+        $this->prix_depart = $prix_depart;
+
+        return $this;
+    }
+
+    public function getPrixVente(): ?float
+    {
+        return $this->prix_vente;
+    }
+
+    public function setPrixVente(float $prix_vente): self
+    {
+        $this->prix_vente = $prix_vente;
+
+        return $this;
+    }
+
+  
 }

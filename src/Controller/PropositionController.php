@@ -96,10 +96,8 @@ class PropositionController extends AbstractFOSRestController
 		(AppelOffre::class)->find($appelOffre);
 		$em = $this->getDoctrine()->getManager();
 		$reponse = $request->get('reponse');
-		$prix = $request ->get('prix');
 		$proposition= new Proposition();
 		$proposition ->setReponse($reponse);
-		$proposition ->setPrix($prix);
 		$profilVendeur->addProposition($proposition);
 		$proposition->setAppelOffre($offre);
 		$em->persist($proposition);
@@ -122,7 +120,7 @@ class PropositionController extends AbstractFOSRestController
 		(Proposition::class)->find($proposition);
 		$parameter = json_decode($request->getContent(),true);
 		$proposition->setReponse($parameter['reponse']);
-		$proposition->setPrix($parameter['prix']);
+	
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($proposition);
 		$em->flush();

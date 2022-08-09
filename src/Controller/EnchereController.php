@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Controller;
-
 use App\Entity\Categorie;
 use App\Entity\Enchere;
+use App\Entity\ProfilVendeur;
 use App\Repository\EnchereRepository;
 use ContainerDKhXcz3\PaginatorInterface_82dac15;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,12 +15,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\EnchereType;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\Date;
-
+ini_set('memory_limit', '-1');
 class EnchereController extends AbstractFOSRestController
 {
+
+
 	/**
 	 * @var EntityManagerInterface
 	 */
@@ -80,28 +80,30 @@ class EnchereController extends AbstractFOSRestController
 	
 	/** creation article
 	 * @param Request $request
-	 * @Rest\Post("/api/enchere")
+	 * @Rest\Post("/api/enchere/{profilVendeur}")
 	 * @return \FOS\RestBundle\View\View|Response
+
 	 */
-	public function new(Request $request)
+	public function new(Request $request,ProfilVendeur $profilVendeur)
 	{
-		$profilVendeur = $this->getUser()->getProfilVendeur();
+		$profilVendeur= $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
 		$em = $this->getDoctrine()->getManager();
-		$description = $request->get('descriptionEnch');
-		$dateDebut = $request->get('dateDebut');
-		$dateFin = $request->get('dateFin');
-		$statut = $request->get('statut');
+		$description_ench = $request->request->get('description_ench');
+		$date_debut = $request->request->get('date_debut');
+		$date_fin = $request->request->get('date_fin');
+		$prix_depart = $request->request->get('prix_depart');
 		$enchere = new Enchere();
-		$enchere->setDescriptionEnch($description);
-		$enchere->setDateDebut(new \DateTime($dateDebut));
-		$enchere->setDateFin(new \DateTime($dateFin));
+		$enchere->setDescriptionEnch($description_ench);
+		$enchere->setDateDebut(new \DateTime($date_debut));
+		$enchere->setDateFin(new \DateTime($date_fin));
+		$enchere->setPrixDepart($prix_depart);
+		$enchere->setPrixVente($prix_depart);
 		$enchere->setProfilVendeur($profilVendeur);
-		$enchere->setStatut("p");
 		$em->persist($enchere);
 		$em->flush();
 		return $this->handleView
-		($this->view(['message' => 'Enchere enregistré'], Response::HTTP_CREATED));
-		
+		($this->view($enchere, Response::HTTP_CREATED));
 	}
 	
 	/** modification appel offre
@@ -118,8 +120,8 @@ class EnchereController extends AbstractFOSRestController
 		$parameter = json_decode($request->getContent(), true);
 		$dateDebut = $request->get('dateDebut');
 		$dateFin = $request->get('dateFin');
-		$statut = $request->get('statut');
-		$enchere->setDescriptionEnch($parameter['descriptionEnch']);
+	
+		$enchere->setNom($parameter['nom']);
 		$enchere->setDateDebut(new \DateTime($dateDebut));
 		$enchere->setDateFin(new \DateTime($dateFin));
 	
@@ -135,7 +137,7 @@ class EnchereController extends AbstractFOSRestController
 	 * @Rest\Delete("/api/enchere/{enchere}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function deleteEnchere($enchere): Response
+	public function deleteEnchere( Enchere $enchere): Response
 	{
 		$profilVendeur = $this->getUser()->getProfilVendeur();
 		$enchere = $this->getDoctrine()->getRepository
@@ -147,7 +149,7 @@ class EnchereController extends AbstractFOSRestController
 	}
 	
 	/** liste des user selon chaque enchere
-	 * @Rest\Get("/listRejoint/{enchere}", name="liste_rejoint")
+	 * @Rest\Get("/api/listeRejoints/{enchere}", name="liste_rejoint")
 	 * @return Response
 	 */
 	public function listUserByEnchere($enchere)
@@ -171,28 +173,28 @@ class EnchereController extends AbstractFOSRestController
 	
 	
 	/** liste des encheres terminee
-	 * @Rest\Get("/encheresTerminees", name="liste_enchere_termine")
+	 * @Rest\Get("/api/encheresTerminees", name="liste_enchere_termine")
 	 * @return Response
 	 */
 	public function termine (EnchereRepository $enchereRepository)
 	{
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
-			->andWhere('e.dateFin <= :date')
+			->andWhere('e.date_fin <= :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
 		return $this->handleView($this->view($list));
 	}
 	/** liste des encheres terminee
-	 * @Rest\Get("/encheresPlanifiees", name="liste_enchere_planifie")
+	 * @Rest\Get("/api/encheresPlanifiees", name="liste_enchere_planifie")
 	 * @return Response
 	 */
 	public function planifie (EnchereRepository $enchereRepository)
 	{
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
-			->andWhere('e.dateDebut > :date')
+			->andWhere('e.date_debut > :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
@@ -200,23 +202,51 @@ class EnchereController extends AbstractFOSRestController
 	}
 	
 	/** liste des encheres enCours
-	 * @Rest\Get("/encheresEnCours", name="liste_enchere_enCours")
+	 * @Rest\Get("/api/encheresEnCours", name="liste_enchere_enCours")
 	 * @return Response
 	 */
 	public function enCours (EnchereRepository $enchereRepository)
 	{
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
-			->Where(' e.dateDebut <= :date')
+			->Where(' e.date_debut <= :date')
 			->setParameter('date', $dateNow)
-			->andWhere(' e.dateFin >= :date')
+			->andWhere(' e.date_fin >= :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
 		
-		return $this->handleView($this->view($list));
+		return $this->handleView($this->view($list));}
+	
+	
+	
+	/** liste des participants
+	 * @Rest\Get("/api/listeParticipants/{enchere}", name="liste_participants_user")
+	 * @return \FOS\RestBundle\View\View
+	 */
+	public function Participants($enchere)
+	{
+		$enchere = $this->getDoctrine()->getRepository
+		(Enchere::class)->find($enchere);
+		$participants = $enchere->getParticipations();
+		return $this->view($participants, Response::HTTP_OK);
 	}
 	
+	
+	/** liste des encheres terminee
+	 * @Rest\Get("/encheresT")
+	 * @return Response
+	*/
+	public function enchereT(EnchereRepository $enchereRepository)
+	{
+		$dateNow = new \DateTime();
+		$list =$enchereRepository->createQueryBuilder('e')
+			->andWhere('e.date_fin <= :date')
+			->setParameter('date', $dateNow)
+			->getQuery()
+			->getResult();
+		return $this->handleView($this->view($list));
+	}
 	
 	
 	

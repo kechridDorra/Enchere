@@ -11,13 +11,16 @@ use App\Repository\AppelOffreRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\FileBag;
 
 
 
@@ -89,22 +92,38 @@ class AppelOffreController extends AbstractFOSRestController
 	/** creation appelOffre
 	 * @param Request $request
 	 * @Rest\Post("/api/appelOffre")
-	 * @return \FOS\RestBundle\View\View|Response
+	 * @return FOS\RestBundle\View\View|Response
 	 */
 	public function new(Request $request)
 	{
-		$user = $this->getUser();
 		$em = $this->getDoctrine()->getManager();
-		$contexte = $request->get('contexte');
-		$dateExp = $request ->get('dateExp');
-		$appelOffre= new AppelOffre();
-		$appelOffre  ->setContexte($contexte);
-		$appelOffre  ->setDateExp(new \DateTime($dateExp));
+		$user = $this->getUser();
+		$titre = $request->get('titre');
+		$description = $request->get('description');
+		$prix = $request->get('prix');
+		$image = $request->files->get('image');
+		$appelOffre=new AppelOffre();
+		$appelOffre->setTitre($titre);
+		$appelOffre->setDescription($description);
+		$appelOffre->setPrix($prix);
 		$user->addAppelOffre($appelOffre);
+			// On génère un nouveau nom de fichier
+			$fichier = md5(uniqid()) . '.' . $image->guessExtension();
+			// On copie le fichier dans le dossier uploads
+			$image->move(
+				$this->getParameter('images_directory'),
+				$fichier
+			);
+			// On crée l'image dans la base de données
+		
+			$appelOffre->setImage($fichier);
+		
+		
+		
 		$em->persist($appelOffre);
 		$em->flush();
 		return $this->handleView
-		($this->view(['message'=>'Appel Offre enregistré'], Response::HTTP_CREATED));
+		($this->view(['message' => 'offre enregistré'], Response::HTTP_CREATED));
 	}
 	
 	

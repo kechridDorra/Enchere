@@ -22,10 +22,7 @@ class Proposition
      */
     private $reponse;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $prix;
+  
 
     /**
      * @ORM\ManyToOne(targetEntity=ProfilVendeur::class, inversedBy="propositions")
@@ -54,17 +51,7 @@ class Proposition
         return $this;
     }
 
-    public function getPrix(): ?string
-    {
-        return $this->prix;
-    }
-
-    public function setPrix(?string $prix): self
-    {
-        $this->prix = $prix;
-
-        return $this;
-    }
+    
 
     public function getProfilVendeur(): ?ProfilVendeur
     {

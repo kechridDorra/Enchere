@@ -2,30 +2,30 @@
 
 namespace App\Repository;
 
-use App\Entity\AppelOffre;
+use App\Entity\Participation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
-ini_set('memory_limit', '-1');
+
 /**
- * @method AppelOffre|null find($id, $lockMode = null, $lockVersion = null)
- * @method AppelOffre|null findOneBy(array $criteria, array $orderBy = null)
- * @method AppelOffre[]    findAll()
- * @method AppelOffre[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Participation|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Participation|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Participation[]    findAll()
+ * @method Participation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class AppelOffreRepository extends ServiceEntityRepository
+class ParticipationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, AppelOffre::class);
+        parent::__construct($registry, Participation::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(AppelOffre $entity, bool $flush = true): void
+    public function add(Participation $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +37,7 @@ class AppelOffreRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(AppelOffre $entity, bool $flush = true): void
+    public function remove(Participation $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +46,15 @@ class AppelOffreRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return AppelOffre[] Returns an array of AppelOffre objects
+    //  * @return Participation[] Returns an array of Participation objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
+            ->orderBy('p.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +63,10 @@ class AppelOffreRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?AppelOffre
+    public function findOneBySomeField($value): ?Participation
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

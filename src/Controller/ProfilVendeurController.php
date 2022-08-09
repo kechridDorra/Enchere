@@ -81,6 +81,8 @@ class ProfilVendeurController extends AbstractFOSRestController
 	}
 	
 	
+	
+	
 	/** creation profil vendeur
 	 * @param Request $request
 	 * @Rest\Post("/profilVendeur", name="appel_offre_new")
@@ -135,4 +137,18 @@ class ProfilVendeurController extends AbstractFOSRestController
 		$em->flush();
 		return $this->json('Vendeur supprimé');
 	}
+	
+	/** liste des user selon chaque enchere
+	 * @Rest\Get("/mesEncheres", name="mes_enchere")
+	 * @return Response
+	 */
+	public function enchereVendeur( ):Response
+	{
+		$user= $this->getUser();
+		$profilVendeur=$user->getProfilVendeur();
+		$mesEncheres=$profilVendeur->getEncheres();
+		return $this->handleView
+		($this->view($mesEncheres, Response::HTTP_CREATED));
+	}
+	
 }

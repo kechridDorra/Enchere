@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\AppelOffre;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,8 +14,15 @@ class AppelOffreType extends AbstractType
     {
         $builder
             ->add('contexte')
-            ->add('dateExp');
-     
+	        ->add('description')
+	        ->add('prix')
+	        ->add('image', FileType::class, [
+		        'label' => 'telecharger une image',
+		        'required' => false,
+		        'mapped' => false,
+		
+	        ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
