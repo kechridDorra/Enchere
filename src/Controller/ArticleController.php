@@ -82,14 +82,11 @@
 			$image = $request->files->get('image');
 			$cat = $this->getDoctrine()->getRepository
 			(Categorie::class)->find($categorie);
-			
 			$article = new Article();
 			$article->setTitre($titre);
 			$article->setDescription($description);
 			$article->setCategorie($cat);
 			$article->setEnchere($ench);
-		
-			
 			// On génère un nouveau nom de fichier
 			$fichier = md5(uniqid()) . '.' . $image->guessExtension();
 			// On copie le fichier dans le dossier uploads
@@ -98,7 +95,6 @@
 				$fichier
 			);
 			// On crée l'image dans la base de données
-			
 			$article->setImage($fichier);
 			$em->persist($article);
 			$em->flush();

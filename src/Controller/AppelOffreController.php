@@ -47,8 +47,6 @@ class AppelOffreController extends AbstractFOSRestController
 
 		$this->appelOffreRepository=$appelOffreRepository;
 	}
-	
-	
 	/**
 	 * @param Request $request
 	 * @Rest\Get("/appelOffre/{appelOffre}", name="appel_offre_show")
@@ -62,7 +60,7 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	/** get appels selon user
 	 * @param Request $request
-	 * @Rest\Get("/api/appelOffres", name="appel_offre_user")
+	 * @Rest\Get("/api/mesappelOffres", name="mes_appel_offre")
 	 *  @return Response
 	 */
 	public function AppelOffreByUser()
@@ -76,7 +74,18 @@ class AppelOffreController extends AbstractFOSRestController
 	
 	/**
 	 * @param Request $request
-	 * @Rest\Get("/appelOffres", name="pappel_offre_list")
+	 * @Rest\Get("/appelsOffres", name="appel_offre_list")
+	 * @return Response
+	 */
+	public function listOffres()
+	{
+		$repository = $this->getDoctrine()->getRepository(AppelOffre::class);
+		$appelOffres = $repository->findAll();
+		return $this->handleView($this->view($appelOffres));
+	}
+	/**
+	 * @param Request $request
+	 * @Rest\Get("/api/appelOffres", name="pappel_offre_list")
 	 * @return Response
 	 */
 	public function list()
@@ -180,7 +189,7 @@ class AppelOffreController extends AbstractFOSRestController
 	 * @Rest\Get("/api/appelOffresExp", name="appel_offre_expire")
 	 * @return Response
 	 */
-	public function Expire (AppelOffreRepository $appelOffreRepository)
+	/*public function Expire (AppelOffreRepository $appelOffreRepository)
 	{
 		$dateNow = new \DateTime();
 		$list =$appelOffreRepository->createQueryBuilder('e')
@@ -195,7 +204,7 @@ class AppelOffreController extends AbstractFOSRestController
 	 * @Rest\Get("/api/appelOffresDispo", name="appel_offre_disponible")
 	 * @return Response
 	 */
-	public function Disponible (AppelOffreRepository $appelOffreRepository)
+	/*public function Disponible (AppelOffreRepository $appelOffreRepository)
 	{
 		$dateNow = new \DateTime();
 		$list =$appelOffreRepository->createQueryBuilder('e')
@@ -205,6 +214,6 @@ class AppelOffreController extends AbstractFOSRestController
 			->getResult();
 		return $this->handleView($this->view($list));
 	}
-	
+	*/
 	
 }
