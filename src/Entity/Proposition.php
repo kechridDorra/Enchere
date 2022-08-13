@@ -34,6 +34,11 @@ class Proposition
      */
     private $appelOffre;
 
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $prix;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -73,6 +78,18 @@ class Proposition
     public function setAppelOffre(?AppelOffre $appelOffre): self
     {
         $this->appelOffre = $appelOffre;
+
+        return $this;
+    }
+
+    public function getPrix(): ?float
+    {
+        return $this->prix;
+    }
+
+    public function setPrix(?float $prix): self
+    {
+        $this->prix = $prix;
 
         return $this;
     }

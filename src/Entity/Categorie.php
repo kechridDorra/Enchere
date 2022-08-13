@@ -24,14 +24,17 @@ class Categorie
      */
     private $nom;
 
+   
+
     /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="categorie",orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity=Enchere::class, mappedBy="categorie")
      */
-    private $articles;
+    private $encheres;
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->encheres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,30 +54,31 @@ class Categorie
         return $this;
     }
 
+    
     /**
-     * @return Collection<int, Article>
+     * @return Collection<int, Enchere>
      */
-    public function getArticles(): Collection
+    public function getEncheres(): Collection
     {
-        return $this->articles;
+        return $this->encheres;
     }
 
-    public function addArticle(Article $article): self
+    public function addEnchere(Enchere $enchere): self
     {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->setCategorie($this);
+        if (!$this->encheres->contains($enchere)) {
+            $this->encheres[] = $enchere;
+            $enchere->setCategorie($this);
         }
 
         return $this;
     }
 
-    public function removeArticle(Article $article): self
+    public function removeEnchere(Enchere $enchere): self
     {
-        if ($this->articles->removeElement($article)) {
-	        $this->articles[]=$article;
-            if ($article->getCategorie() === $this) {
-                $article->setCategorie(null);
+        if ($this->encheres->removeElement($enchere)) {
+            // set the owning side to null (unless already changed)
+            if ($enchere->getCategorie() === $this) {
+                $enchere->setCategorie(null);
             }
         }
 

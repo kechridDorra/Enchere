@@ -76,14 +76,12 @@ class EnchereController extends AbstractFOSRestController
 			Enchere::class)->findAll();
 		return $this->handleView($this->view($encheres));
 	}
-	
-	
-	/** creation article
+	/** creation aenchere
 	 * @param Request $request
 	 * @Rest\Post("/api/enchere/{profilVendeur}")
 	 * @return \FOS\RestBundle\View\View|Response
-
 	 */
+	
 	public function new(Request $request,ProfilVendeur $profilVendeur)
 	{
 		$profilVendeur= $this->getDoctrine()->getRepository
@@ -93,17 +91,34 @@ class EnchereController extends AbstractFOSRestController
 		$date_debut = $request->request->get('date_debut');
 		$date_fin = $request->request->get('date_fin');
 		$prix_depart = $request->request->get('prix_depart');
+		$nom_article = $request->request->get('nom_article');
+		$description_article = $request->request->get('description_article');
+		$categorie = $request->get('categorie');
+		$image = $request->files->get('image');
+		$cat = $this->getDoctrine()->getRepository
+		(Categorie::class)->find($categorie);
 		$enchere = new Enchere();
 		$enchere->setDescriptionEnch($description_ench);
 		$enchere->setDateDebut(new \DateTime($date_debut));
 		$enchere->setDateFin(new \DateTime($date_fin));
 		$enchere->setPrixDepart($prix_depart);
 		$enchere->setPrixVente($prix_depart);
+		$enchere->setNomArticle($nom_article);
+		$enchere->setCategorie($cat);
+		$enchere->setDescriptionArticle($description_article);
 		$enchere->setProfilVendeur($profilVendeur);
+		$fichier = md5(uniqid()) . '.' . $image->guessExtension();
+		// On copie le fichier dans le dossier uploads
+		$image->move(
+			$this->getParameter('images_directory'),
+			$fichier
+		);
+		// On crée l'image dans la base de données
+		$enchere->setImage($fichier);
 		$em->persist($enchere);
 		$em->flush();
 		return $this->handleView
-		($this->view($enchere, Response::HTTP_CREATED));
+		($this->view(['message' => 'enchere enregistré'], Response::HTTP_CREATED));
 	}
 	
 	/** modification appel offre
@@ -118,13 +133,16 @@ class EnchereController extends AbstractFOSRestController
 		$enchere = $this->getDoctrine()->getRepository
 		(Enchere::class)->find($enchere);
 		$parameter = json_decode($request->getContent(), true);
-		$dateDebut = $request->get('dateDebut');
-		$dateFin = $request->get('dateFin');
-	
-		$enchere->setNom($parameter['nom']);
-		$enchere->setDateDebut(new \DateTime($dateDebut));
-		$enchere->setDateFin(new \DateTime($dateFin));
-	
+		$date_debut = $request->get('dateDebut');
+		$date_fin = $request->get('dateFin');
+		$enchere->setDescriptionEnch($parameter['description_ench']);
+		$enchere->setPrixDepart($parameter['prix_depart']);
+		$enchere->setDateDebut(new \DateTime($date_debut));
+		$enchere->setDateFin(new \DateTime($date_fin));
+		$enchere->setNomArticle($parameter['nom_article']);
+		$enchere->setDescriptionArticle($parameter['description_article']);
+		$enchere->setImage($parameter['image']);
+		$enchere->setCategorie($parameter['categorie']);
 		$em = $this->getDoctrine()->getManager();
 		$em->persist($enchere);
 		$em->flush();

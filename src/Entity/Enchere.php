@@ -25,10 +25,7 @@ class Enchere
      */
     private $profilVendeur;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="enchere")
-     */
-    private $articles;
+    
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -67,6 +64,26 @@ class Enchere
      */
     private $prix_vente;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $nom_article;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $description_article;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="encheres")
+     */
+    private $categorie;
+
     
 
     public function __construct()
@@ -103,35 +120,7 @@ class Enchere
         return $this;
     }
 
-    /**
-     * @return Collection<int, Article>
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->setEnchere($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getEnchere() === $this) {
-                $article->setEnchere(null);
-            }
-        }
-
-        return $this;
-    }
+   
 
     public function getDescriptionEnch(): ?string
     {
@@ -238,6 +227,54 @@ class Enchere
     public function setPrixVente(float $prix_vente): self
     {
         $this->prix_vente = $prix_vente;
+
+        return $this;
+    }
+
+    public function getNomArticle(): ?string
+    {
+        return $this->nom_article;
+    }
+
+    public function setNomArticle(string $nom_article): self
+    {
+        $this->nom_article = $nom_article;
+
+        return $this;
+    }
+
+    public function getDescriptionArticle(): ?string
+    {
+        return $this->description_article;
+    }
+
+    public function setDescriptionArticle(string $description_article): self
+    {
+        $this->description_article = $description_article;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?Categorie
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?Categorie $categorie): self
+    {
+        $this->categorie = $categorie;
 
         return $this;
     }
