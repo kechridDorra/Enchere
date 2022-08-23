@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Form\FormTypeInterface;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=EnchereRepository::class)
  */
@@ -17,11 +17,13 @@ class Enchere
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("enchere:read")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=ProfilVendeur::class, inversedBy="encheres")
+     * @Groups("enchere:read")
      */
     private $profilVendeur;
 
@@ -29,58 +31,69 @@ class Enchere
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("enchere:read")
      */
     private $description_ench;
 
     /**
      * @ORM\Column(type="datetime")
      * @var string A "Y-m-d H:i:s" formatted value
+     * @Groups("enchere:read")
      */
     private $date_debut;
 
     /**
      * @ORM\Column(type="datetime")
      * @var string A "Y-m-d H:i:s" formatted value
+     * @Groups("enchere:read")
      */
     private $date_fin;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="encheres")
+     * @Groups("enchere:read")
      */
     private $users;
 
     /**
      * @ORM\OneToMany(targetEntity=Participation::class, mappedBy="enchere")
+     * @Groups("enchere:read")
      */
     private $participations;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("enchere:read")
      */
     private $prix_depart;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups("enchere:read")
      */
     private $prix_vente;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("enchere:read")
      */
     private $nom_article;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("enchere:read")
      */
     private $description_article;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("enchere:read")
      */
     private $image;
 
     /**
      * @ORM\ManyToOne(targetEntity=Categorie::class, inversedBy="encheres")
+     * @Groups("enchere:read")
      */
     private $categorie;
 

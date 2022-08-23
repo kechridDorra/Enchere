@@ -105,7 +105,7 @@ class PropositionController extends AbstractFOSRestController
 		$em->persist($proposition);
 		$em->flush();
 		return $this->handleView
-		($this->view(['message'=>'proposition enregistré'], Response::HTTP_CREATED));
+		($this->view($proposition , Response::HTTP_CREATED));
 	}
 	
 	/** modification proposition

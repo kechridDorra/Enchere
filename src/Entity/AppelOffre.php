@@ -22,9 +22,7 @@ class AppelOffre
      * @ORM\Column(type="string", length=255)
      */
     private $titre;
-
-   
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="appelOffres")
      */

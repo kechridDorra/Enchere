@@ -60,7 +60,7 @@ class AppelOffreController extends AbstractFOSRestController
 	}
 	/** get appels selon user
 	 * @param Request $request
-	 * @Rest\Get("/api/mesappelOffres", name="mes_appel_offre")
+	 * @Rest\Get("/api/mesAppelOffres", name="mes_appel_offre")
 	 *  @return Response
 	 */
 	public function AppelOffreByUser()

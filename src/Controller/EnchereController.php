@@ -17,6 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Form\EnchereType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Validator\Constraints\Date;
+
 ini_set('memory_limit', '-1');
 class EnchereController extends AbstractFOSRestController
 {
@@ -202,7 +203,7 @@ class EnchereController extends AbstractFOSRestController
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
-		return $this->handleView($this->view($list));
+		return $this->json($list);
 	}
 	/** liste des encheres terminee
 	 * @Rest\Get("/api/encheresPlanifiees", name="liste_enchere_planifie")
