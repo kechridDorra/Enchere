@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AppelOffre;
+use App\Entity\ProfilVendeur;
 use App\Entity\Proposition;
 use App\Repository\PropositionRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -86,12 +87,13 @@ class PropositionController extends AbstractFOSRestController
 	
 	/** creation proposition
 	 * @param Request $request
-	 * @Rest\Post("/proposition/{appelOffre}")
+	 * @Rest\Post("/proposition/{profilVendeur}/{appelOffre}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function new(Request $request ,$appelOffre)
+	public function new(Request $request ,$appelOffre,$profilVendeur)
 	{  //$user = $this->getUser();
-		$profilVendeur=$this->getUser()->getProfilVendeur();
+		$vendeur = $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
 		$offre = $this->getDoctrine()->getRepository
 		(AppelOffre::class)->find($appelOffre);
 		$em = $this->getDoctrine()->getManager();
@@ -100,7 +102,7 @@ class PropositionController extends AbstractFOSRestController
 		$proposition= new Proposition();
 		$proposition ->setReponse($reponse);
 		$proposition ->setPrix($prix);
-		$profilVendeur->addProposition($proposition);
+		$proposition->setProfilVendeur($vendeur);
 		$proposition->setAppelOffre($offre);
 		$em->persist($proposition);
 		$em->flush();

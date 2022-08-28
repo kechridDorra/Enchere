@@ -232,25 +232,7 @@
 		}
 		
 		
-		/** rejoindre enchere
-		 * @param Request $request
-		 * @Rest\Post("/api/user/enchere/{enchere}")
-		 * @return \FOS\RestBundle\View\View|Response
-		 */
-		public function rejoindreEnchere($enchere): Response
-		{
-			$user = $this->getUser();
-			$enchere = $this->getDoctrine()->getRepository
-			(Enchere::class)->find($enchere);
-			$em = $this->getDoctrine()->getManager();
-			$enchere ->addUser($user);
-			$em->persist($enchere);
-		    $em->flush();
-			return $this->json('Vous avez bien rejoindre cette enchere');
-			
 		
-			
-		}
 		
 		
 		

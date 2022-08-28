@@ -47,13 +47,14 @@ class ParticipationController extends AbstractFOSRestController
 	
 	/** ajouter une participation
 	 * @param Request $request
-	 * @Rest\Post("/api/rejoindre/{enchere}")
+	 * @Rest\Post("/api/rejoindre/{user}/{enchere}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 * @return Response
 	 */
-	public function addParticipation($enchere): Response
+	public function addParticipation($enchere,$user): Response
 	{
-		$user = $this->getUser();
+		$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
 		$enchere = $this->getDoctrine()->getRepository
 		(Enchere::class)->find($enchere);
 		$em = $this->getDoctrine()->getManager();
@@ -63,21 +64,8 @@ class ParticipationController extends AbstractFOSRestController
 		$em->persist($participation);
 		$em->flush();
 		return $this->handleView
-		($this->view($participation, Response::HTTP_CREATED));
+		($this->view( $participation ,Response::HTTP_CREATED));
 		
-	}
-	
-	/**
-	 * @param Request $request
-	 * @Rest\Get("/api/participation/{participation}", name="participation_show")
-	 * @return Response
-	 */
-	public function show(Participation $participation)
-	{
-		$data = $this->getDoctrine()->getRepository
-		(Participation::class)->find($participation);
-		return $this->handleView
-	($this->view($data, Response::HTTP_CREATED));
 	}
 	
 	/**
@@ -95,9 +83,5 @@ class ParticipationController extends AbstractFOSRestController
 		$em->flush();
 		return $this->handleView($this->view(['message'=> 'prix Modifie' ], Response::HTTP_CREATED));
 	}
-	
-	
-	
-	
 	
 }

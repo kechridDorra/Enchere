@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\AppelOffre;
+use App\Entity\ProfilVendeur;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use DateTimeInterface;
@@ -72,6 +73,8 @@ class AppelOffreController extends AbstractFOSRestController
 		return $this->handleView($this->view($appelOffres));
 	}
 	
+	
+	
 	/**
 	 * @param Request $request
 	 * @Rest\Get("/appelsOffres", name="appel_offre_list")
@@ -83,28 +86,16 @@ class AppelOffreController extends AbstractFOSRestController
 		$appelOffres = $repository->findAll();
 		return $this->handleView($this->view($appelOffres));
 	}
-	/**
-	 * @param Request $request
-	 * @Rest\Get("/api/appelOffres", name="pappel_offre_list")
-	 * @return Response
-	 */
-	public function list()
-	{
-		$repository = $this->getDoctrine()->getRepository(AppelOffre::class);
-		$appelOffres = $repository->findAll();
-		return $this->handleView($this->view($appelOffres));
-	}
-	
-	
 	
 	
 	/** creation appelOffre
 	 * @param Request $request
-	 * @Rest\Post("/api/appelOffre")
+	 * @Rest\Post("/api/appelOffre/{user}")
 	 * @return FOS\RestBundle\View\View|Response
 	 */
-	public function new(Request $request)
-	{
+	public function new(Request $request,$user)
+	{$user= $this->getDoctrine()->getRepository
+	(User::class)->find($user);
 		$em = $this->getDoctrine()->getManager();
 		$user = $this->getUser();
 		$titre = $request->get('titre');
@@ -115,7 +106,7 @@ class AppelOffreController extends AbstractFOSRestController
 		$appelOffre->setTitre($titre);
 		$appelOffre->setDescription($description);
 		$appelOffre->setPrix($prix);
-		$user->addAppelOffre($appelOffre);
+		$appelOffre->setUser($user);
 			// On génère un nouveau nom de fichier
 			$fichier = md5(uniqid()) . '.' . $image->guessExtension();
 			// On copie le fichier dans le dossier uploads
@@ -132,7 +123,7 @@ class AppelOffreController extends AbstractFOSRestController
 		$em->persist($appelOffre);
 		$em->flush();
 		return $this->handleView
-		($this->view(['message' => 'offre enregistré'], Response::HTTP_CREATED));
+		($this->view($appelOffre, Response::HTTP_CREATED));
 	}
 	
 	
@@ -172,48 +163,33 @@ class AppelOffreController extends AbstractFOSRestController
 		return $this->handleView($this->view(['message'=> 'appel Offre Modifie' ], Response::HTTP_CREATED));
 	}
 	
-	/** get propositions selon appelOffre
+	/** get detail appelOffre
 	 * @param Request $request
-	 * @Rest\Get("/appelOffreProp/{appelOffre}", name="prop_offre_get")
+	 * @Rest\Get("/api/appelOffre/{appelOffre}", name="detail_appel")
 	 *  @return Response
 	 */
-	public function getPropositionOffre(AppelOffre $appelOffre)
+	public function getDetailOffre(AppelOffre $appelOffre)
 	{
 		$data = $this->getDoctrine()->getRepository
 		(AppelOffre::class)->find($appelOffre);
-		$propositions = $data->getPropositions();
-		return $this->handleView($this->view($propositions));
+		
+		return $this->handleView($this->view($data));
 	}
 	
-	/** liste des appels offres expiré
-	 * @Rest\Get("/api/appelOffresExp", name="appel_offre_expire")
-	 * @return Response
+	
+	
+	/** get appels selon user
+	 * @param Request $request
+	 * @Rest\Get("/api/appelOffres/{profilVendeur}", name="mes_appel_offre")
+	 *  @return Response
 	 */
-	/*public function Expire (AppelOffreRepository $appelOffreRepository)
+	public function reponseVendeur(ProfilVendeur $profilVendeur)
 	{
-		$dateNow = new \DateTime();
-		$list =$appelOffreRepository->createQueryBuilder('e')
-			->andWhere('e.dateExp < :date')
-			->setParameter('date', $dateNow)
-			->getQuery()
-			->getResult();
-		return $this->handleView($this->view($list));
+		$user= $this->getUser();
+		$profilVendeur= $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
+		$repository = $this->getDoctrine()->getRepository(AppelOffre::class);
+		$appelOffres = $repository->findAll();
+		return $this->handleView($this->view($appelOffres));
 	}
-	
-	/** liste des appels offres dispo
-	 * @Rest\Get("/api/appelOffresDispo", name="appel_offre_disponible")
-	 * @return Response
-	 */
-	/*public function Disponible (AppelOffreRepository $appelOffreRepository)
-	{
-		$dateNow = new \DateTime();
-		$list =$appelOffreRepository->createQueryBuilder('e')
-			->andWhere('e.dateExp >= :date')
-			->setParameter('date', $dateNow)
-			->getQuery()
-			->getResult();
-		return $this->handleView($this->view($list));
-	}
-	*/
-	
 }

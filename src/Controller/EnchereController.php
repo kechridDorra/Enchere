@@ -3,6 +3,7 @@ namespace App\Controller;
 use App\Entity\Categorie;
 use App\Entity\Enchere;
 use App\Entity\ProfilVendeur;
+use App\Entity\User;
 use App\Repository\EnchereRepository;
 use ContainerDKhXcz3\PaginatorInterface_82dac15;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -66,7 +67,7 @@ class EnchereController extends AbstractFOSRestController
 	
 	/** get appels selon le  vendeur
 	 * @param Request $request
-	 * @Rest\Get("/api/enchereByVendeur", name="enchere_vendeur")
+	 * @Rest\Get("/api/mesEncheres", name="enchere_vendeur")
 	 * @return Response
 	 */
 	public function getEncherebyVendeur()
@@ -122,7 +123,7 @@ class EnchereController extends AbstractFOSRestController
 		($this->view(['message' => 'enchere enregistré'], Response::HTTP_CREATED));
 	}
 	
-	/** modification appel offre
+	/** modification enchere
 	 * @param Request $request
 	 * @Rest\Patch("/api/enchere/{enchere}")
 	 * @return \FOS\RestBundle\View\View|Response
@@ -167,50 +168,42 @@ class EnchereController extends AbstractFOSRestController
 		return $this->json('Enchere supprimé');
 	}
 	
-	/** liste des user selon chaque enchere
-	 * @Rest\Get("/api/listeRejoints/{enchere}", name="liste_rejoint")
+	/** liste participants
+	 * @Rest\Get("/api/listeParticipants/{user}/{enchere}", name="liste_participants")
 	 * @return Response
 	 */
-	public function listUserByEnchere($enchere)
+	public function PaticipantsbyEnchere($enchere,$user)
 	{
 		$enchere = $this->getDoctrine()->getRepository
 	(Enchere::class)->find($enchere);
-		$list = $enchere->getUsers();
+		$list = $enchere->getParticipations();
 		return $this->handleView($this->view($list));
-	}
-	
-	/** liste des enchere selon chaque user
-	 * @Rest\Get("/enchereRejoint", name="liste_encher_user")
-	 * @return \FOS\RestBundle\View\View
-	 */
-	public function listEnchere()
-	{
-		$user = $this->getUser();
-		$list = $user->getEncheres();
-		return $this->view($list, Response::HTTP_OK);
 	}
 	
 	
 	/** liste des encheres terminee
-	 * @Rest\Get("/api/encheresTerminees", name="liste_enchere_termine")
+	 * @Rest\Get("/api/encheresTerminees/{user}", name="liste_enchere_termine")
 	 * @return Response
 	 */
-	public function termine (EnchereRepository $enchereRepository)
-	{
+	public function termine (EnchereRepository $enchereRepository, $user)
+	{$user = $this->getDoctrine()->getRepository
+	(User::class)->find($user);
+	
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
 			->andWhere('e.date_fin <= :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
-		return $this->json($list);
+		return $this->handleView($this->view($list));
 	}
 	/** liste des encheres terminee
-	 * @Rest\Get("/api/encheresPlanifiees", name="liste_enchere_planifie")
+	 * @Rest\Get("/api/encheresPlanifiees/{user}", name="liste_enchere_planifie")
 	 * @return Response
 	 */
-	public function planifie (EnchereRepository $enchereRepository)
-	{
+	public function planifie (EnchereRepository $enchereRepository, $user)
+	{$user = $this->getDoctrine()->getRepository
+	(User::class)->find($user);
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
 			->andWhere('e.date_debut > :date')
@@ -221,11 +214,12 @@ class EnchereController extends AbstractFOSRestController
 	}
 	
 	/** liste des encheres enCours
-	 * @Rest\Get("/api/encheresEnCours", name="liste_enchere_enCours")
+	 * @Rest\Get("/api/encheresEnCours/{user}", name="liste_enchere_enCours")
 	 * @return Response
 	 */
-	public function enCours (EnchereRepository $enchereRepository)
-	{
+	public function enCours (EnchereRepository $enchereRepository, $user)
+	{$user = $this->getDoctrine()->getRepository
+	(User::class)->find($user);
 		$dateNow = new \DateTime();
 		$list =$enchereRepository->createQueryBuilder('e')
 			->Where(' e.date_debut <= :date')
@@ -239,18 +233,7 @@ class EnchereController extends AbstractFOSRestController
 	
 	
 	
-	/** liste des participants
-	 * @Rest\Get("/api/listeParticipants/{enchere}", name="liste_participants_user")
-	 * @return \FOS\RestBundle\View\View
-	 */
-	public function Participants($enchere)
-	{
-		$enchere = $this->getDoctrine()->getRepository
-		(Enchere::class)->find($enchere);
-		$participants = $enchere->getParticipations();
-		return $this->view($participants, Response::HTTP_OK);
-	}
-	
+
 	
 	/** liste des encheres terminee
 	 * @Rest\Get("/encheresT")
