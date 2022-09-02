@@ -22,8 +22,8 @@ use Symfony\Component\Validator\Constraints\Date;
 ini_set('memory_limit', '-1');
 class EnchereController extends AbstractFOSRestController
 {
-
-
+	
+	
 	/**
 	 * @var EntityManagerInterface
 	 */
@@ -78,15 +78,16 @@ class EnchereController extends AbstractFOSRestController
 			Enchere::class)->findAll();
 		return $this->handleView($this->view($encheres));
 	}
+	
 	/** creation aenchere
 	 * @param Request $request
 	 * @Rest\Post("/api/enchere/{profilVendeur}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	
-	public function new(Request $request,ProfilVendeur $profilVendeur)
+	public function new(Request $request, $profilVendeur)
 	{
-		$profilVendeur= $this->getDoctrine()->getRepository
+		$profilVendeur = $this->getDoctrine()->getRepository
 		(ProfilVendeur::class)->find($profilVendeur);
 		$em = $this->getDoctrine()->getManager();
 		$description_ench = $request->request->get('description_ench');
@@ -157,7 +158,7 @@ class EnchereController extends AbstractFOSRestController
 	 * @Rest\Delete("/api/enchere/{enchere}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function deleteEnchere( Enchere $enchere): Response
+	public function deleteEnchere(Enchere $enchere): Response
 	{
 		$profilVendeur = $this->getUser()->getProfilVendeur();
 		$enchere = $this->getDoctrine()->getRepository
@@ -172,10 +173,10 @@ class EnchereController extends AbstractFOSRestController
 	 * @Rest\Get("/api/listeParticipants/{user}/{enchere}", name="liste_participants")
 	 * @return Response
 	 */
-	public function PaticipantsbyEnchere($enchere,$user)
+	public function listeParticipants($enchere)
 	{
 		$enchere = $this->getDoctrine()->getRepository
-	(Enchere::class)->find($enchere);
+		(Enchere::class)->find($enchere);
 		$list = $enchere->getParticipations();
 		return $this->handleView($this->view($list));
 	}
@@ -185,27 +186,30 @@ class EnchereController extends AbstractFOSRestController
 	 * @Rest\Get("/api/encheresTerminees/{user}", name="liste_enchere_termine")
 	 * @return Response
 	 */
-	public function termine (EnchereRepository $enchereRepository, $user)
-	{$user = $this->getDoctrine()->getRepository
-	(User::class)->find($user);
-	
+	public function termine(EnchereRepository $enchereRepository, $user)
+	{
+		$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
+		
 		$dateNow = new \DateTime();
-		$list =$enchereRepository->createQueryBuilder('e')
+		$list = $enchereRepository->createQueryBuilder('e')
 			->andWhere('e.date_fin <= :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
 			->getResult();
 		return $this->handleView($this->view($list));
 	}
+	
 	/** liste des encheres terminee
 	 * @Rest\Get("/api/encheresPlanifiees/{user}", name="liste_enchere_planifie")
 	 * @return Response
 	 */
-	public function planifie (EnchereRepository $enchereRepository, $user)
-	{$user = $this->getDoctrine()->getRepository
-	(User::class)->find($user);
+	public function planifie(EnchereRepository $enchereRepository, $user)
+	{
+		$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
 		$dateNow = new \DateTime();
-		$list =$enchereRepository->createQueryBuilder('e')
+		$list = $enchereRepository->createQueryBuilder('e')
 			->andWhere('e.date_debut > :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
@@ -217,11 +221,12 @@ class EnchereController extends AbstractFOSRestController
 	 * @Rest\Get("/api/encheresEnCours/{user}", name="liste_enchere_enCours")
 	 * @return Response
 	 */
-	public function enCours (EnchereRepository $enchereRepository, $user)
-	{$user = $this->getDoctrine()->getRepository
-	(User::class)->find($user);
+	public function enCours(EnchereRepository $enchereRepository, $user)
+	{
+		$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
 		$dateNow = new \DateTime();
-		$list =$enchereRepository->createQueryBuilder('e')
+		$list = $enchereRepository->createQueryBuilder('e')
 			->Where(' e.date_debut <= :date')
 			->setParameter('date', $dateNow)
 			->andWhere(' e.date_fin >= :date')
@@ -229,20 +234,18 @@ class EnchereController extends AbstractFOSRestController
 			->getQuery()
 			->getResult();
 		
-		return $this->handleView($this->view($list));}
+		return $this->handleView($this->view($list));
+	}
 	
-	
-	
-
 	
 	/** liste des encheres terminee
 	 * @Rest\Get("/encheresT")
 	 * @return Response
-	*/
+	 */
 	public function enchereT(EnchereRepository $enchereRepository)
 	{
 		$dateNow = new \DateTime();
-		$list =$enchereRepository->createQueryBuilder('e')
+		$list = $enchereRepository->createQueryBuilder('e')
 			->andWhere('e.date_fin <= :date')
 			->setParameter('date', $dateNow)
 			->getQuery()
@@ -250,6 +253,9 @@ class EnchereController extends AbstractFOSRestController
 		return $this->handleView($this->view($list));
 	}
 	
+	
+	
+
 	
 	
 }

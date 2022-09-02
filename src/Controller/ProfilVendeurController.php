@@ -106,12 +106,13 @@ class ProfilVendeurController extends AbstractFOSRestController
 	
 	/** modification vendeur
 	 * @param Request $request
-	 * @Rest\Put("/profilVendeur")
+	 * @Rest\Put("/profilVendeur/{user}")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
-	public function update(Request $request):Response
+	public function updateVendeur(Request $request,$user):Response
 	{
-		$user = $this->getUser();
+		$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
 		$profilVendeur=$this->getUser()->getProfilVendeur();
 		$parameter = json_decode($request->getContent(),true);
 		$profilVendeur->setActivite($parameter['activite']);
@@ -122,21 +123,6 @@ class ProfilVendeurController extends AbstractFOSRestController
 		return $this->handleView($this->view(['message'=> 'Vendeur Modifie' ], Response::HTTP_CREATED));
 	}
 	
-	/** suppression Vendeur
-	 * @param Request $request
-	 * @Rest\Delete("/profilVendeur/{profilVendeur}")
-	 * @return \FOS\RestBundle\View\View|Response
-	 */
-	public function deleteVendeur($profilVendeur):Response
-	{
-		$user = $this->getUser();
-		$profilVendeur = $this->getDoctrine()->getRepository
-		(ProfilVendeur::class)->find($profilVendeur);
-		$em = $this->getDoctrine()->getManager();
-		$em->remove($profilVendeur);
-		$em->flush();
-		return $this->json('Vendeur supprimé');
-	}
 	
 	/** liste des user selon chaque enchere
 	 * @Rest\Get("/mesEncheres", name="mes_enchere")

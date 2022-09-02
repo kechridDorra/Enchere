@@ -116,7 +116,7 @@
 		 * @Rest\Post("/inscription")
 		 * @return \FOS\RestBundle\View\View|Response
 		 */
-		public function inscription(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+		public function addUser(Request $request, UserPasswordEncoderInterface $passwordEncoder)
 		{
 			$em = $this->getDoctrine()->getManager();
 			$nom = $request->get('nom');
@@ -162,7 +162,7 @@
 		 * @Rest\Patch("/api/user/{id}")
 		 * @return \FOS\RestBundle\View\View|Response
 		 */
-		public function update(Request $request, $id): Response
+		public function updateUser(Request $request, $id): Response
 		{
 			$data = $this->getDoctrine()->getRepository
 			(User::class)->find($id);
@@ -231,6 +231,19 @@
 			return $user;
 		}
 		
+		/** get participants
+		 * @Rest\Get("/api/getparticipation/{user}/{enchere}", name="get_participants")
+		 * @return Response
+		 */
+		public function ParticpationByUser($enchere,$user)
+		{$user = $this->getDoctrine()->getRepository
+		(User::class)->find($user);
+			$enchere = $this->getDoctrine()->getRepository
+			(Enchere::class)->find($enchere);
+			
+			$par = $user->getParticipations();
+			return $this->handleView($this->view($par));
+		}
 		
 		
 		

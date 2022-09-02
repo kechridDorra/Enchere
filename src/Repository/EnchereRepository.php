@@ -48,17 +48,16 @@ class EnchereRepository extends ServiceEntityRepository
     /**
     //  * @return Enchere[] Returns an array of Enchere objects
     //  */
-    
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+	    return $this->createQueryBuilder('e')
+		    ->andWhere('e.exampleField = :val')
+		    ->setParameter('val', $value)
+		    ->orderBy('e.id', 'ASC')
+		    ->setMaxResults(10)
+		    ->getQuery()
+		    ->getResult()
+		    ;
     }
     
 

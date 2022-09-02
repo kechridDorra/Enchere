@@ -51,7 +51,7 @@ class ParticipationController extends AbstractFOSRestController
 	 * @return \FOS\RestBundle\View\View|Response
 	 * @return Response
 	 */
-	public function addParticipation($enchere,$user): Response
+	public function addParticipation($user,$enchere): Response
 	{
 		$user = $this->getDoctrine()->getRepository
 		(User::class)->find($user);
@@ -64,7 +64,7 @@ class ParticipationController extends AbstractFOSRestController
 		$em->persist($participation);
 		$em->flush();
 		return $this->handleView
-		($this->view( $participation ,Response::HTTP_CREATED));
+		($this->view($enchere ,Response::HTTP_CREATED));
 		
 	}
 	
@@ -77,11 +77,16 @@ class ParticipationController extends AbstractFOSRestController
 	{   $user = $this->getUser();
 		$part = $this->getDoctrine()->getRepository
 		(Participation::class)->find($participation);
+		$enchere =$part->getEnchere();
 		$prix= $request->request->get('augmentation');
 		$part->setAugmentation($prix);
+		$prixVente=$enchere->getPrixVente();
+		$enchere->setPrixVente($prixVente + $prix);
 		$em = $this->getDoctrine()->getManager();
 		$em->flush();
 		return $this->handleView($this->view(['message'=> 'prix Modifie' ], Response::HTTP_CREATED));
 	}
+	
+	
 	
 }
