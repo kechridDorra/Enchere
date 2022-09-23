@@ -85,7 +85,7 @@ class ProfilVendeurController extends AbstractFOSRestController
 	
 	/** creation profil vendeur
 	 * @param Request $request
-	 * @Rest\Post("/profilVendeur", name="appel_offre_new")
+	 * @Rest\Post("/profilVendeur", name="profil_vendeur_new")
 	 * @return \FOS\RestBundle\View\View|Response
 	 */
 	public function newVendeur(Request $request)
@@ -125,13 +125,14 @@ class ProfilVendeurController extends AbstractFOSRestController
 	
 	
 	/** liste des user selon chaque enchere
-	 * @Rest\Get("/mesEncheres", name="mes_enchere")
+	 * @Rest\Get("/mesEncheres/{profilVendeur}", name="mes_enchere")
 	 * @return Response
 	 */
-	public function enchereVendeur( ):Response
+	public function enchereVendeur($profilVendeur)
 	{
-		$user= $this->getUser();
-		$profilVendeur=$user->getProfilVendeur();
+		$vend = $this->getDoctrine()->getRepository
+		(ProfilVendeur::class)->find($profilVendeur);
+		$vendeur= $profilVendeur->getProfilVendeur();
 		$mesEncheres=$profilVendeur->getEncheres();
 		return $this->handleView
 		($this->view($mesEncheres, Response::HTTP_CREATED));

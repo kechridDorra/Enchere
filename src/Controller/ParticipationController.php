@@ -68,9 +68,9 @@ class ParticipationController extends AbstractFOSRestController
 		
 	}
 	
-	/**
+	/** augmenter prix enchere
 	 * @param Request $request
-	 * @Rest\Post("/api/augmenter/{participation}", name="augmenter")
+	 * @Rest\Post("/api/augmenter/{participation}", name="augmenter_prix_enchere")
 	 * @return Response
 	 */
 	public function Augmentation(Participation $participation ,Request $request)

@@ -100,8 +100,8 @@
 			return $this->handleView($this->view($data));
 		}
 		
-		/** affichage utilisateur
-		 * @Rest\Get("/api/user/mail/{email}", name="dtail_user")
+		/** affichage utilisateur selon email
+		 * @Rest\Get("/api/user/mail/{email}", name="detail_user_email")
 		 * @return Response
 		 */
 		public function getUserbyEmail($email,UserRepository $repository)

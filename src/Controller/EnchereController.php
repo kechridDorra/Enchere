@@ -65,7 +65,7 @@ class EnchereController extends AbstractFOSRestController
 		return $this->handleView($this->view($data));
 	}
 	
-	/** get appels selon le  vendeur
+	/** liste encheres de chaque vendeur
 	 * @param Request $request
 	 * @Rest\Get("/api/mesEncheres", name="enchere_vendeur")
 	 * @return Response
@@ -169,7 +169,7 @@ class EnchereController extends AbstractFOSRestController
 		return $this->json('Enchere supprimé');
 	}
 	
-	/** liste participants
+	/** liste participants de chaque enchère
 	 * @Rest\Get("/api/listeParticipants/{user}/{enchere}", name="liste_participants")
 	 * @return Response
 	 */
@@ -238,7 +238,7 @@ class EnchereController extends AbstractFOSRestController
 	}
 	
 	
-	/** liste des encheres terminee
+	/** liste des encheres terminee par visiteur
 	 * @Rest\Get("/encheresT")
 	 * @return Response
 	 */

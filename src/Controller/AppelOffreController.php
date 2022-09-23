@@ -183,7 +183,7 @@ class AppelOffreController extends AbstractFOSRestController
 	 * @Rest\Get("/api/appelOffres/{profilVendeur}", name="mes_appel_offre")
 	 *  @return Response
 	 */
-	public function reponseVendeur(ProfilVendeur $profilVendeur)
+	public function mesAppels(ProfilVendeur $profilVendeur)
 	{
 		$user= $this->getUser();
 		$profilVendeur= $this->getDoctrine()->getRepository

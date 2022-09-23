@@ -44,7 +44,7 @@ class PropositionController extends AbstractFOSRestController
 		
 		$this->propositionRepository=$propositionRepository;
 	}
-     /**
+     /** afficher proposition selon id
      * @param Request $request
      * @Rest\Get("/proposition/{proposition}", name="proposition_show")
      * @return \FOS\RestBundle\View\View

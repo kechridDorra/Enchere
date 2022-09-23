@@ -28,7 +28,7 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Pfe Backend');
+            ->setTitle('Administrateur');
     }
 
     public function configureMenuItems(): iterable
